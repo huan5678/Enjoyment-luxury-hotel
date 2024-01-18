@@ -1,5 +1,4 @@
-import Box from '@mui/system/Box';
-import { Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 
 interface SquareCardProps {
   title: string;
@@ -14,17 +13,18 @@ function SquareCard(props: SquareCardProps) {
       <Box
         width={97}
         height={97}
-        display="flex"
-        flexDirection="column"
-        justifyContent="space-between"
         sx={{
-          p: 2,
+          p: '20.5px 16px',
           borderRadius: '8px',
           border: '1px solid ',
           borderColor: 'primary.light',
         }}>
-        {children}
-        <Typography sx={{ fontWeight: 700 }}>{title}</Typography>
+        <IconButton color="primary" size="large" sx={{ p: 0, cursor: 'auto', '&:hover': 'none' }}>
+          {children}
+        </IconButton>
+        <Typography sx={{ fontWeight: 700 }} mt={1}>
+          {title}
+        </Typography>
       </Box>
     </>
   );
