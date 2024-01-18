@@ -1,34 +1,67 @@
 'use client';
 import * as React from 'react';
-import { Container, Typography } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import BedIcon from '@mui/icons-material/Bed';
-import SquareCard from '@/components/aggregate/SquareCard';
-import Headline from '@/components/aggregate/Headline';
+import SquareCard from '@/components/room/SquareCard';
+import Headline from '@/components/common/Headline';
+import RoomFacilityBlock from '@/components/room/RoomFacilityBlock';
+import RoomTypeCard from '@/components/room/RoomTypeCard';
 
 export default function Index() {
   return (
-    <Container maxWidth="lg">
-      <Grid container spacing={2}>
-        <Grid xs={12}>
+    <Container maxWidth="xl" sx={{ minHeight: '100vh', backgroundColor: '#f7f2ee' }}>
+      <Grid container spacing={3} columnSpacing={2}>
+        <Grid item md={12}>
           <Grid container spacing={4}>
-            <Grid xs={4}>
+            <Grid item md={4}>
               <Typography variant="h5">SquareCard</Typography>
             </Grid>
-            <Grid xs={8}>
+            <Grid item md={8}>
               <SquareCard title="lorem">
-                <BedIcon color="primary" sx={{ fontSize: 24 }} />
+                <BedIcon />
               </SquareCard>
             </Grid>
           </Grid>
         </Grid>
-        <Grid xs={12}>
+        <Grid item md={12}>
           <Grid container spacing={4}>
-            <Grid xs={4}>
+            <Grid item md={4}>
               <Typography variant="h5">Headline</Typography>
             </Grid>
-            <Grid xs={8}>
+            <Grid item md={8}>
               <Headline title="loremlorem" />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item md={12}>
+          <Grid container spacing={4}>
+            <Grid item>
+              <Typography variant="h5">RoomFacilityBlock</Typography>
+            </Grid>
+            <Grid item>
+              <Box
+                sx={{
+                  width: '100%',
+                  borderRadius: '8px',
+                  backgroundColor: '#fff',
+                  py: 3,
+                  pl: 3,
+                  pr: { sm: 3, md: '173px' },
+                }}>
+                <RoomFacilityBlock
+                  facilities={['Facility1', 'Facility2', 'Facility3', 'Facility4', 'Facility5', 'Facility6']}
+                />
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item md={12}>
+          <Grid container spacing={4}>
+            <Grid item>
+              <Typography variant="h5">RoomTypeCard</Typography>
+            </Grid>
+            <Grid item width="100%">
+              <RoomTypeCard />
             </Grid>
           </Grid>
         </Grid>
