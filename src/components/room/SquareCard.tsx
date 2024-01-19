@@ -1,6 +1,8 @@
 import { Box, IconButton, Typography } from '@mui/material';
 import { SquareCardProps } from '@/app/(room)/room-type/_aggregation';
 
+export type { SquareCardProps };
+
 function SquareCard(props: SquareCardProps) {
   const { title, children } = props;
 
