@@ -22,7 +22,7 @@ function SquareCard(props: SquareCardProps) {
         <IconButton color="primary" size="large" sx={{ p: 0, cursor: 'auto', '&:hover': 'none' }}>
           {children}
         </IconButton>
-        <Typography sx={{ fontWeight: 700 }} mt={1}>
+        <Typography variant="title" mt={1}>
           {title}
         </Typography>
       </Box>

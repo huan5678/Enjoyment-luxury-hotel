@@ -5,7 +5,7 @@ interface RoomFacilityBlockProp {
   facilities: string[];
 }
 
-function RoomFacilityBlock(props: RoomFacilityBlockProp) {
+export default function RoomFacilityBlock(props: RoomFacilityBlockProp) {
   const { facilities } = props;
 
   return (
@@ -14,7 +14,7 @@ function RoomFacilityBlock(props: RoomFacilityBlockProp) {
         <Grid item sm={6} md={2.4} key={title}>
           <Stack direction="row">
             <Check color="primary" sx={{ fontSize: 24 }} />
-            <Typography sx={{ fontWeight: 700 }} ml={1}>
+            <Typography variant="title" ml={1}>
               {title}
             </Typography>
           </Stack>
@@ -23,5 +23,3 @@ function RoomFacilityBlock(props: RoomFacilityBlockProp) {
     </Grid>
   );
 }
-
-export default RoomFacilityBlock;

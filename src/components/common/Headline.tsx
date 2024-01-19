@@ -4,7 +4,7 @@ interface HeadlineProps {
   title: string;
 }
 
-function Headline(props: HeadlineProps) {
+export default function Headline(props: HeadlineProps) {
   const { title } = props;
   return (
     <Box display="flex" alignItems="center">
@@ -17,15 +17,7 @@ function Headline(props: HeadlineProps) {
           borderRadius: '10px',
         }}
       />
-      <Typography
-        sx={{
-          fontSize: { sm: '24px' },
-          fontWeight: 700,
-        }}>
-        {title}
-      </Typography>
+      <Typography variant="h5">{title}</Typography>
     </Box>
   );
 }
-
-export default Headline;
