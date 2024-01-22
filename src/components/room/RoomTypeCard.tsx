@@ -1,34 +1,27 @@
+import { useRouter } from 'next/navigation';
 import { Box, Card, CardContent, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import AspectRatio from '@mui/icons-material/AspectRatio';
 import Bed from '@mui/icons-material/Bed';
 import Person from '@mui/icons-material/Person';
 import SquareCard from './SquareCard';
-import { SquareCardProps } from './SquareCard';
 
-interface RoomTypeCardProps {
-  name?: string;
-  description?: string;
-  price: number;
-  imageUrl?: string;
-  imageUrlList?: string[];
-  areaInfo?: string;
-  bedInfo?: string;
-  maxPeople?: number;
-}
+import { RoomTypeCardProps, SquareCardProps } from '@/app/(room)/room-type/_aggregation';
 
 export default function RoomTypeCard(props: RoomTypeCardProps) {
+  const router = useRouter();
+
   const graphicalData: SquareCardProps[] = [
     {
-      title: props?.areaInfo,
+      title: props.areaInfo,
       children: <AspectRatio />,
     },
     {
-      title: props?.bedInfo,
+      title: props.bedInfo,
       children: <Bed />,
     },
     {
-      title: props?.maxPeople,
+      title: `${props.maxPeople}人`,
       children: <Person />,
     },
   ];
@@ -83,10 +76,9 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
                     fontSize: { sm: '16px', md: '24px' },
                     fontWeight: 700,
                   }}>
-                  NT$ 10,888
-                  {/* {`NT$ ${props.price.toLocaleString()}`} */}
+                  {`NT$ ${props.price.toLocaleString()}`}
                 </Typography>
-                <IconButton color="primary" size="large">
+                <IconButton color="primary" size="large" onClick={() => router.push(`/room-type/${props._id}`)}>
                   <ArrowForward />
                 </IconButton>
               </Box>
