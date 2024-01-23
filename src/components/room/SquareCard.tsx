@@ -14,9 +14,8 @@ function SquareCard(props: SquareCardProps) {
         alignItems="flex-start"
         sx={{
           p: '20.5px 16px',
+          backgroundColor: '#fff',
           borderRadius: '8px',
-          border: '1px solid ',
-          borderColor: 'primary.light',
         }}>
         <IconButton color="primary" size="large" sx={{ p: 0, cursor: 'auto', '&:hover': 'none' }}>
           {children}
