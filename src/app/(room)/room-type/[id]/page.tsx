@@ -32,19 +32,19 @@ export default function Page() {
 
   return (
     <>
-      <Box>
-        <Grid container direction="row">
+      <Box component="section" py="5rem" px="3.75rem" sx={{ backgroundColor: '#f7f2ee' }}>
+        <Grid container direction="row" overflow="hidden" sx={{ borderRadius: '20px' }}>
           <Grid item sm={6}>
-            <Box component="div" sx={{ width: '100%' }}>
-              <img src={t.imageUrl} style={{ width: '100%', objectFit: 'cover' }}></img>
+            <Box component="div" sx={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+              <img src={t.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }}></img>
             </Box>
           </Grid>
           <Grid item sm={6}>
-            <Grid container direction="row">
+            <Grid container direction="row" sx={{ width: '100%', height: '100%' }}>
               {t.imageUrlList.map((item, idx) => (
-                <Grid item sm={6} key={idx + 1}>
-                  <Box component="div" sx={{ width: '100%' }}>
-                    <img src={item} style={{ width: '100%', objectFit: 'cover' }}></img>
+                <Grid item sm={6} height="50%" key={idx + 1}>
+                  <Box component="div" sx={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                    <img src={item} style={{ width: '100%', height: '100%', objectFit: 'cover' }}></img>
                   </Box>
                 </Grid>
               ))}
