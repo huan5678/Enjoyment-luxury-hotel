@@ -12,7 +12,7 @@ import roomTypeFakeData from '../fakeData';
 
 export default function Page() {
   const router = useRouter();
-  const t = roomTypeFakeData[1];
+  const t = roomTypeFakeData[0];
 
   const theme = useTheme();
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
@@ -76,6 +76,21 @@ export default function Page() {
                         isBorder: false,
                       }}
                     />
+                  </Box>
+                </Box>
+                <Box component="section">
+                  <Headline title="房間格局"></Headline>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      borderRadius: '0.5rem',
+                      backgroundColor: '#fff',
+                      py: 3,
+                      pl: 3,
+                      pr: { sm: 3, xl: '140px' },
+                      mt: { sm: 2, md: 3 },
+                    }}>
+                    <RoomFacilityBlock facilities={t.layoutInfo}></RoomFacilityBlock>
                   </Box>
                 </Box>
                 <Box component="section">
