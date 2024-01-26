@@ -73,6 +73,7 @@ export default function Page() {
                         areaInfo: t.areaInfo,
                         bedInfo: t.bedInfo,
                         maxPeople: t.maxPeople,
+                        isBorder: false,
                       }}
                     />
                   </Box>

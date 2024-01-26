@@ -4,10 +4,13 @@ import Bed from '@mui/icons-material/Bed';
 import Person from '@mui/icons-material/Person';
 import SquareCard from './SquareCard';
 
-import { SquareCardProps } from '@/app/(room)/room-type/_aggregation';
-
-export default function RoomBaseInfoBlock(props: { areaInfo: string; bedInfo: string; maxPeople: number }) {
-  const graphicalData: SquareCardProps[] = [
+export default function RoomBaseInfoBlock(props: {
+  areaInfo: string;
+  bedInfo: string;
+  maxPeople: number;
+  isBorder: boolean;
+}) {
+  const graphicalData = [
     {
       title: props.areaInfo,
       children: <AspectRatio />,
@@ -26,7 +29,9 @@ export default function RoomBaseInfoBlock(props: { areaInfo: string; bedInfo: st
     <Grid container spacing={2}>
       {graphicalData.map((item) => (
         <Grid item key={item.title}>
-          <SquareCard title={item.title}>{item.children}</SquareCard>
+          <SquareCard title={item.title} isBorder={props.isBorder}>
+            {item.children}
+          </SquareCard>
         </Grid>
       ))}
     </Grid>
