@@ -3,7 +3,7 @@
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import RoomTypeCard from '@/components/room/RoomTypeCard';
+import RoomTypeCard from '@/app/(room)/room-type/RoomTypeCard';
 import roomTypeFakeData from './fakeData';
 
 export default function Page() {

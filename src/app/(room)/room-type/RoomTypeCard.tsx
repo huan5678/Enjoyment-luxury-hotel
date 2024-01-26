@@ -1,16 +1,23 @@
 import { useRouter } from 'next/navigation';
 import { Box, Card, CardContent, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
 import ArrowForward from '@mui/icons-material/ArrowForward';
-import RoomBaseInfoBlock from './RoomBaseInfoBlock';
+import RoomBaseInfoBlock from '@/components/room/RoomBaseInfoBlock';
 
-import { RoomTypeCardProps } from '@/app/(room)/room-type/_aggregation';
+interface RoomTypeCardProps {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  imageUrlList: string[];
+  areaInfo: string;
+  bedInfo: string;
+  maxPeople: number;
+}
 
 export default function RoomTypeCard(props: RoomTypeCardProps) {
   const router = useRouter();
-  /**
-   * TO DO
-   * 挖洞、輪播
-   */
+
   return (
     <Card
       elevation={0}
@@ -39,6 +46,7 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
                     areaInfo: props.areaInfo,
                     bedInfo: props.bedInfo,
                     maxPeople: props.maxPeople,
+                    isBorder: true,
                   }}
                 />
               </Box>
