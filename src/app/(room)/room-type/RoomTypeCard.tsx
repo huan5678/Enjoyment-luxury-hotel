@@ -1,8 +1,10 @@
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Box, Card, CardContent, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 // swiper
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 //
 import RoomBaseInfoBlock from '@/components/room/RoomBaseInfoBlock';
@@ -30,55 +32,49 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
         borderRadius: '20px',
       }}>
       <Grid container width="100%">
-        <Grid item md={12} lg={7}>
-          {/** TODO swiper 在 RWD 時會壞掉 */}
+        <Grid item sm={12} md={12} lg={7}>
           <Swiper
             className="room-type-swiper"
+            modules={[Pagination, Autoplay]}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
             spaceBetween={0}
             slidesPerView={1}
             onSlideChange={() => console.log('slide change')}
             onSwiper={(swiper) => console.log(swiper)}>
             <SwiperSlide>
-              {/* <Box
-                component="div"
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  maxHeight: { md: '351px', lg: '457px' },
-                  backgroundImage: `url(${props.imageUrl})`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}></Box> */}
               <Box
+                position={'relative'}
                 sx={{
                   width: '100%',
-                  height: '100%',
-                  maxHeight: { md: '351px', lg: '457px' },
+                  height: { sm: '351px', md: '351px', lg: '100%' },
+                  maxHeight: { sm: '351px', md: '351px', lg: '457px' },
                   overflow: 'hidden',
                   img: { width: '100%', height: '100%', objectFit: 'cover' },
                 }}>
-                <img src={props.imageUrl}></img>
+                <Image src={props.imageUrl} alt={`${props.name}環境`} layout="fill" objectFit="cover" />
               </Box>
             </SwiperSlide>
             {props.imageUrlList.map((item, idx) => (
               <SwiperSlide key={idx + 1}>
                 <Box
-                  component="div"
+                  position={'relative'}
                   sx={{
                     width: '100%',
-                    height: '100%',
-                    maxHeight: { md: '351px', lg: '457px' },
-                    backgroundImage: `url(${item})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}></Box>
+                    height: { sm: '351px', md: '351px', lg: '100%' },
+                    maxHeight: { sm: '351px', md: '351px', lg: '457px' },
+                    overflow: 'hidden',
+                    img: { width: '100%', height: '100%', objectFit: 'cover' },
+                  }}>
+                  <Image src={item} alt={`${props.name}環境-${idx + 1}`} layout="fill" objectFit="cover" />
+                </Box>
               </SwiperSlide>
             ))}
           </Swiper>
         </Grid>
-        <Grid item md={12} lg={5}>
+        <Grid item sm={12} md={12} lg={5}>
           <CardContent sx={{ p: { sm: 2, md: 5 } }}>
             <Stack spacing={{ sm: 3, md: 5 }}>
               <Box>
