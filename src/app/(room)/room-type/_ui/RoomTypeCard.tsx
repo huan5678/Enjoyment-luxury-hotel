@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 import { Box, Card, CardContent, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
 import ArrowForward from '@mui/icons-material/ArrowForward';
@@ -8,22 +8,10 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 //
 import RoomBaseInfoBlock from '@/components/room/RoomBaseInfoBlock';
-
-interface RoomTypeCardProps {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-  imageUrlList: string[];
-  areaInfo: string;
-  bedInfo: string;
-  maxPeople: number;
-}
+//
+import { RoomTypeCardProps } from '../_domain';
 
 export default function RoomTypeCard(props: RoomTypeCardProps) {
-  const router = useRouter();
-
   return (
     <Card
       elevation={0}
@@ -112,9 +100,11 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
                   }}>
                   {`NT$ ${props.price.toLocaleString()}`}
                 </Typography>
-                <IconButton color="primary" size="large" onClick={() => router.push(`/room-type/${props._id}`)}>
-                  <ArrowForward />
-                </IconButton>
+                <Link href={`/room-type/${props._id}`}>
+                  <IconButton color="primary" size="large">
+                    <ArrowForward />
+                  </IconButton>
+                </Link>
               </Box>
             </Stack>
           </CardContent>
