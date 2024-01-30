@@ -1,14 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { Box, Button, Card, Container, Grid, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Grid, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline';
 import Headline from '@/components/common/Headline';
 import RoomFacilityBlock from '@/components/room/RoomFacilityBlock';
 import RoomBaseInfoBlock from '@/components/room/RoomBaseInfoBlock';
 //
 import { RoomInfo } from '../_domain/index';
+import Link from 'next/link';
 
 /**
  * To do
@@ -20,6 +23,13 @@ export default function Page(props: any) {
 
   const theme = useTheme();
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
+
+  const adjustData = {
+    roomId: data.id,
+    checkInDate: '2023/06/18',
+    checkOutDate: '2023/06/19',
+    peopleNum: 2,
+  };
 
   const rules = [
     '入住時間為下午3點，退房時間為上午12點。',
@@ -37,7 +47,7 @@ export default function Page(props: any) {
   return (
     <>
       <Box component="section" py="5rem" px="3.75rem" sx={{ backgroundColor: '#f7f2ee' }}>
-        <Grid container direction="row" overflow="hidden" sx={{ borderRadius: '20px' }}>
+        <Grid container direction="row" overflow="hidden" sx={{ borderRadius: '20px' }} position="relative">
           <Grid item sm={6}>
             <Box
               position={'relative'}
@@ -69,6 +79,12 @@ export default function Page(props: any) {
             </Grid>
           </Grid>
         </Grid>
+        <Button
+          disableElevation
+          variant="outlined"
+          sx={{ position: 'absolute', right: '80px', bottom: '0px', p: '1rem 2rem' }}>
+          看更多
+        </Button>
       </Box>
       <Box width="100%" sx={{ backgroundColor: '#f7f2ee' }}>
         <Container>
@@ -186,14 +202,39 @@ export default function Page(props: any) {
                       }}>
                       {`NT$ ${roomInfo.price.toLocaleString()}`}
                     </Typography>
-                    <Box>TO DO 日期與人數</Box>
                     <Box>
-                      <Button
-                        variant="contained"
-                        disableElevation
-                        sx={{ width: '100%', px: 4, py: 2, borderRadius: '0.5rem' }}>
-                        立即預訂
-                      </Button>
+                      {/** TO DO 日期與人數*/}
+                      <Stack spacing={2} direction="row">
+                        <IconButton aria-label="減少人數">
+                          <RemoveCircleOutline
+                            sx={{
+                              fontSize: '56px',
+                            }}
+                          />
+                        </IconButton>
+                        <IconButton aria-label="增加人數">
+                          <AddCircleOutline
+                            sx={{
+                              fontSize: '56px',
+                            }}
+                          />
+                        </IconButton>
+                      </Stack>
+                    </Box>
+                    <Box>
+                      {/** TO DO passing data to room booking page */}
+                      <Link
+                        href={{
+                          pathname: '/roomBooking',
+                          query: adjustData,
+                        }}>
+                        <Button
+                          variant="contained"
+                          disableElevation
+                          sx={{ width: '100%', px: 4, py: 2, borderRadius: '0.5rem' }}>
+                          立即預訂
+                        </Button>
+                      </Link>
                     </Box>
                   </Stack>
                 </Card>
