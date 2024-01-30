@@ -3,5 +3,5 @@ import RoomTypes from './RoomTypes';
 
 export default async function Page() {
   const res = await getRoomTypes();
-  return <RoomTypes data={res.data} />;
+  return <RoomTypes data={res.result} />;
 }

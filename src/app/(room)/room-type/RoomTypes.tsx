@@ -8,11 +8,7 @@ import RoomTypeCard from '@/app/(room)/room-type/_ui/RoomTypeCard';
 //
 import { RoomInfo, RoomTypeCardProps } from './_domain';
 
-/**
- * To do
- * props: RoomInfo[]
- */
-export default function Page(props: any) {
+export default function Page({ data }: { data: RoomInfo[] }) {
   const theme = useTheme();
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
   return (
@@ -71,7 +67,7 @@ export default function Page(props: any) {
             </Typography>
             <Box component="section" mt={matches ? 5 : 10}>
               <Grid container spacing={matches ? 3 : 6}>
-                {props.map((room: RoomTypeCardProps) => (
+                {data.map((room: RoomTypeCardProps) => (
                   <Grid item sm={12} key={room._id} width="100%">
                     <RoomTypeCard {...room}></RoomTypeCard>
                   </Grid>

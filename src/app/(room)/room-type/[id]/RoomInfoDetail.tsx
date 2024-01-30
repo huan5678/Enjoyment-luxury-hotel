@@ -17,15 +17,14 @@ import Link from 'next/link';
  * To do
  * props: RoomInfo
  */
-export default function Page(props: any) {
-  const { data } = props;
-  const roomInfo = data.result;
+export default function Page({ data }: any) {
+  const { result } = data;
 
   const theme = useTheme();
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
 
   const adjustData = {
-    roomId: data.id,
+    ...result,
     checkInDate: '2023/06/18',
     checkOutDate: '2023/06/19',
     peopleNum: 2,
@@ -57,12 +56,12 @@ export default function Page(props: any) {
                 overflow: 'hidden',
                 img: { width: '100%', height: '100%', objectFit: 'cover' },
               }}>
-              <Image width={500} height={500} src={roomInfo.imageUrl} alt={`${roomInfo.name}環境`} priority={true} />
+              <Image width={500} height={500} src={result.imageUrl} alt={`${result.name}環境`} priority={true} />
             </Box>
           </Grid>
           <Grid item sm={6}>
             <Grid container direction="row" sx={{ width: '100%', height: '100%' }}>
-              {roomInfo.imageUrlList.map((item: string, idx: number) => (
+              {result.imageUrlList.map((item: string, idx: number) => (
                 <Grid item sm={6} height="50%" key={idx + 1}>
                   <Box
                     position={'relative'}
@@ -72,7 +71,7 @@ export default function Page(props: any) {
                       overflow: 'hidden',
                       img: { width: '100%', height: '100%', objectFit: 'cover' },
                     }}>
-                    <Image width={500} height={500} src={item} alt={`${roomInfo.name}環境-${idx + 1}`} />
+                    <Image width={500} height={500} src={item} alt={`${result.name}環境-${idx + 1}`} />
                   </Box>
                 </Grid>
               ))}
@@ -94,10 +93,10 @@ export default function Page(props: any) {
                 <Stack spacing={matches ? 3 : 10}>
                   <Box component="section">
                     <Typography component="div" variant="h2">
-                      {roomInfo.name}
+                      {result.name}
                     </Typography>
                     <Typography component="div" color="#4b4b4b" mt={1}>
-                      {roomInfo.description}
+                      {result.description}
                     </Typography>
                   </Box>
                   <Box component="section">
@@ -105,9 +104,9 @@ export default function Page(props: any) {
                     <Box sx={{ mt: { sm: 2, md: 3 } }}>
                       <RoomBaseInfoBlock
                         {...{
-                          areaInfo: roomInfo.areaInfo,
-                          bedInfo: roomInfo.bedInfo,
-                          maxPeople: roomInfo.maxPeople,
+                          areaInfo: result.areaInfo,
+                          bedInfo: result.bedInfo,
+                          maxPeople: result.maxPeople,
                           isBorder: false,
                         }}
                       />
@@ -125,7 +124,7 @@ export default function Page(props: any) {
                         pr: { sm: 3, xl: '140px' },
                         mt: { sm: 2, md: 3 },
                       }}>
-                      <RoomFacilityBlock facilities={roomInfo.layoutInfo}></RoomFacilityBlock>
+                      <RoomFacilityBlock facilities={result.layoutInfo}></RoomFacilityBlock>
                     </Box>
                   </Box>
                   <Box component="section">
@@ -140,7 +139,7 @@ export default function Page(props: any) {
                         pr: { sm: 3, xl: '140px' },
                         mt: { sm: 2, md: 3 },
                       }}>
-                      <RoomFacilityBlock facilities={roomInfo.facilityInfo}></RoomFacilityBlock>
+                      <RoomFacilityBlock facilities={result.facilityInfo}></RoomFacilityBlock>
                     </Box>
                   </Box>
                   <Box component="section">
@@ -155,7 +154,7 @@ export default function Page(props: any) {
                         pr: { sm: 3, xl: '140px' },
                         mt: { sm: 2, md: 3 },
                       }}>
-                      <RoomFacilityBlock facilities={roomInfo.amenityInfo}></RoomFacilityBlock>
+                      <RoomFacilityBlock facilities={result.amenityInfo}></RoomFacilityBlock>
                     </Box>
                   </Box>
                   <Box component="section">
@@ -187,10 +186,10 @@ export default function Page(props: any) {
                     </Typography>
                     <Box>
                       <Typography component="div" variant="h2" color="#4b4b4b">
-                        {roomInfo.name}
+                        {result.name}
                       </Typography>
                       <Typography component="div" color="#4b4b4b" mt={1}>
-                        {roomInfo.description}
+                        {result.description}
                       </Typography>
                     </Box>
                     <Typography
@@ -200,7 +199,7 @@ export default function Page(props: any) {
                         fontSize: { sm: '1rem', md: '1.5rem' },
                         fontWeight: 700,
                       }}>
-                      {`NT$ ${roomInfo.price.toLocaleString()}`}
+                      {`NT$ ${result.price.toLocaleString()}`}
                     </Typography>
                     <Box>
                       {/** TO DO 日期與人數*/}
@@ -222,7 +221,6 @@ export default function Page(props: any) {
                       </Stack>
                     </Box>
                     <Box>
-                      {/** TO DO passing data to room booking page */}
                       <Link
                         href={{
                           pathname: '/roomBooking',
