@@ -1,17 +1,24 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
+import moment, { Moment } from 'moment';
+import { useState } from 'react';
 import { Box, Button, Card, Container, Grid, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline';
+//
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+//
 import Headline from '@/components/common/Headline';
 import RoomFacilityBlock from '@/components/room/RoomFacilityBlock';
 import RoomBaseInfoBlock from '@/components/room/RoomBaseInfoBlock';
 //
 import { RoomInfo } from '../_domain/index';
-import Link from 'next/link';
 
 /**
  * To do
@@ -19,16 +26,41 @@ import Link from 'next/link';
  */
 export default function Page({ data }: any) {
   const { result } = data;
+  // console.log('result', result);
 
   const theme = useTheme();
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
 
-  const adjustData = {
-    ...result,
-    checkInDate: '2023/06/18',
-    checkOutDate: '2023/06/19',
-    peopleNum: 2,
+  /**
+   * 入住人數計算與邏輯
+   */
+  const [peopleNum, setPeopleNum] = useState(1);
+  const [isAllowAdd, setIsAllowAdd] = useState(true);
+  const [isAllowSub, setIsAllowSub] = useState(false);
+  const handleCounts = (act: string) => {
+    let touristNum = peopleNum;
+    act === 'sub' ? touristNum-- : touristNum++;
+    setPeopleNum(touristNum);
+    touristNum === 1 ? setIsAllowSub(false) : setIsAllowSub(true);
+    touristNum === result.maxPeople ? setIsAllowAdd(false) : setIsAllowAdd(true);
   };
+
+  /**
+   * 日期選擇
+   */
+  const [checkInDate, setCheckInDate] = useState<Moment | null>(moment());
+  const [checkOutDate, setCheckOutDate] = useState<Moment | null>(moment().add(1, 'd'));
+
+  /**
+   * 整理要給預定頁面的資料
+   */
+  const adjustData = {
+    roomId: result._id,
+    checkInDate: moment(checkInDate).format('YYYY/MM/DD'),
+    checkOutDate: moment(checkOutDate).format('YYYY/MM/DD'),
+    peopleNum: peopleNum,
+  };
+  // console.log('adjustData', adjustData);
 
   const rules = [
     '入住時間為下午3點，退房時間為上午12點。',
@@ -78,12 +110,12 @@ export default function Page({ data }: any) {
             </Grid>
           </Grid>
         </Grid>
-        <Button
+        {/* <Button
           disableElevation
           variant="outlined"
           sx={{ position: 'absolute', right: '80px', bottom: '0px', p: '1rem 2rem' }}>
           看更多
-        </Button>
+        </Button> */}
       </Box>
       <Box width="100%" sx={{ backgroundColor: '#f7f2ee' }}>
         <Container>
@@ -192,6 +224,58 @@ export default function Page({ data }: any) {
                         {result.description}
                       </Typography>
                     </Box>
+                    {/* 日期 */}
+                    <Stack spacing={1} direction={matches ? 'column' : 'row'}>
+                      <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <MobileDatePicker
+                          label="入住"
+                          format="YYYY/MM/DD"
+                          disablePast={true}
+                          minDate={checkInDate}
+                          views={['year', 'month', 'day']}
+                          defaultValue={checkInDate}
+                          onChange={(newValue) => setCheckInDate(newValue)}
+                        />
+                      </LocalizationProvider>
+                      <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <MobileDatePicker
+                          label="退房"
+                          format="YYYY/MM/DD"
+                          disablePast={true}
+                          minDate={checkOutDate}
+                          views={['year', 'month', 'day']}
+                          defaultValue={checkOutDate}
+                          onChange={(newValue) => setCheckOutDate(newValue)}
+                        />
+                      </LocalizationProvider>
+                    </Stack>
+                    {/* 人數 */}
+                    <Box
+                      width="100%"
+                      display="flex"
+                      flexDirection={matches ? 'column' : 'row'}
+                      justifyContent={matches ? 'center' : 'space-between'}
+                      alignItems={matches ? 'flex-start' : 'center'}>
+                      <Typography component="div">人數</Typography>
+                      <Stack spacing={1} direction="row" justifyContent="center" alignItems="center">
+                        <IconButton aria-label="減少人數" disabled={!isAllowSub} onClick={() => handleCounts('sub')}>
+                          <RemoveCircleOutline
+                            sx={{
+                              fontSize: '40px',
+                            }}
+                          />
+                        </IconButton>
+                        <Typography variant="h6">{peopleNum}</Typography>
+                        <IconButton aria-label="增加人數" disabled={!isAllowAdd} onClick={() => handleCounts('add')}>
+                          <AddCircleOutline
+                            sx={{
+                              fontSize: '40px',
+                            }}
+                          />
+                        </IconButton>
+                      </Stack>
+                    </Box>
+                    {/* 價格 */}
                     <Typography
                       component="div"
                       color="primary.main"
@@ -201,25 +285,6 @@ export default function Page({ data }: any) {
                       }}>
                       {`NT$ ${result.price.toLocaleString()}`}
                     </Typography>
-                    <Box>
-                      {/** TO DO 日期與人數*/}
-                      <Stack spacing={2} direction="row">
-                        <IconButton aria-label="減少人數">
-                          <RemoveCircleOutline
-                            sx={{
-                              fontSize: '56px',
-                            }}
-                          />
-                        </IconButton>
-                        <IconButton aria-label="增加人數">
-                          <AddCircleOutline
-                            sx={{
-                              fontSize: '56px',
-                            }}
-                          />
-                        </IconButton>
-                      </Stack>
-                    </Box>
                     <Box>
                       <Link
                         href={{
