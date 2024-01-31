@@ -1,7 +1,7 @@
-import { getRoomTypes } from './_infrastructure/api';
+import { apiGetRoomType } from '@/assets/api';
 import RoomTypes from './RoomTypes';
 
 export default async function Page() {
-  const res = await getRoomTypes();
+  const res = await apiGetRoomType();
   return <RoomTypes data={res.result} />;
 }

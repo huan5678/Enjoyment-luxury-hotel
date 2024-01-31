@@ -1,4 +1,4 @@
-import { getRoomDetail } from '../_infrastructure/api';
+import { getRoomDetail } from '@/assets/api';
 import RoomInfoDetail from './RoomInfoDetail';
 
 export default async function Page({ params }: { params: { id: string } }) {
