@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import useStore from '@/store';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,7 +18,6 @@ import LogoWhite from '@/assets/images/logoWhite.png';
 import Loader from '@/components/common/Loader';
 import Menu from '@/app/c.menu';
 // others
-import { useLocalStorage } from '@uidotdev/usehooks';
 import { apiCheckUserIsLogin, getUser } from '@/assets/api';
 
 function HideOnScroll({ children, window }: { children: React.ReactElement; window?: () => Window }) {
@@ -35,12 +35,13 @@ function HideOnScroll({ children, window }: { children: React.ReactElement; wind
 export default function Header(props: any) {
   const pathname = usePathname();
   const router = useRouter();
+  const isLogin = useStore((state) => state.isLogin);
+  const setIsLogin = useStore((state) => state.setIsLogin);
   const [istransparent, setIsTransparent] = useState(true);
   const [isFixed, setIsFixed] = useState(true);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLogin, setIsLogin] = useLocalStorage<boolean | null>('isLogin', false);
-  const [userInfo, setUserInfo] = useState({ name: '' });
+  const [userName, setUserName] = useState('');
 
   const transparentPathList = ['/', '/room-type'];
   const fixedPathList = ['/', '/room-type'];
@@ -66,7 +67,7 @@ export default function Header(props: any) {
 
   const getUserInfo = async () => {
     await getUser().then((res: MemberResponseData) => {
-      if (res.status === true) setUserInfo(res.result);
+      if (res.status === true) setUserName(res.result.name);
     });
   };
 
@@ -75,7 +76,6 @@ export default function Header(props: any) {
     await apiCheckUserIsLogin()
       .then((res: CheckLoginSchema) => {
         setIsLogin(res.status);
-        if (res.status) getUserInfo();
       })
       .finally(() => {
         setIsLoading(false);
@@ -86,6 +86,10 @@ export default function Header(props: any) {
     handlePath();
     // eslint-disable-next-line
   }, [pathname]);
+
+  useEffect(() => {
+    if (isLogin) getUserInfo();
+  }, [isLogin]);
 
   useEffect(() => {
     getUserIsLogin();
@@ -126,7 +130,7 @@ export default function Header(props: any) {
               <Typography component="h2">享樂酒店 Enjoyment luxury hotel</Typography>
             </Box>
             <Box sx={{ display: { sm: 'none', md: 'block' } }}>
-              <Menu userInfo={userInfo} />
+              <Menu userName={userName} />
             </Box>
             <IconButton
               sx={{ display: { sm: 'block', md: 'none' } }}
@@ -167,7 +171,7 @@ export default function Header(props: any) {
             width: '100%',
             padding: '0 20px',
           }}>
-          <Menu userInfo={userInfo} isDarwerOpen={openDrawer} toggleDrawer={toggleDrawer} />
+          <Menu userName={userName} isDarwerOpen={openDrawer} toggleDrawer={toggleDrawer} />
         </Box>
       </Drawer>
     </>

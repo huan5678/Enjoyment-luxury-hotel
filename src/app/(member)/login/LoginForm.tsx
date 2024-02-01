@@ -18,7 +18,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Cookies from 'js-cookie';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import useStore from '@/store';
 
 export const loginDataSchema = z.object({
   email: z.string().email('請輸入有效的電子郵件地址'),
@@ -49,6 +51,8 @@ const Label = styled(Typography)(({ theme }) => ({
 }));
 
 const LoginForm = () => {
+  const router = useRouter();
+  const setIsLogin = useStore((state) => state.setIsLogin);
   const [isLoading, setIsLoading] = useState(false);
   const account = Cookies.get('account');
   const {
@@ -76,7 +80,8 @@ const LoginForm = () => {
     console.log(res);
     if (res.status === true) {
       setIsLoading(false);
-      window.location.href = '/';
+      setIsLogin(true);
+      router.push('/');
     }
     setIsLoading(false);
   };
@@ -88,6 +93,7 @@ const LoginForm = () => {
       Cookies.remove('account');
     }
   };
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Input

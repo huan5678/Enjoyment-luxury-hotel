@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Cookies from 'js-cookie';
+import { setCookie } from 'cookies-next';
+import useStore from '@/store';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -8,20 +9,19 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
-import { useLocalStorage } from '@uidotdev/usehooks';
-
 type menuDomSchema = {
   isDarwerOpen?: boolean;
   toggleDrawer?: () => void;
-  userInfo: MemberData | { name: string };
+  userName: string;
 };
 
-export default function NavMenu({ isDarwerOpen, toggleDrawer, userInfo }: menuDomSchema) {
+export default function NavMenu({ isDarwerOpen, toggleDrawer, userName }: menuDomSchema) {
   const [menuClickDom, setMenuClickDom] = useState<null | HTMLElement>(null);
   const [openMenu, setOpenMenu] = useState(false);
-  const [isLogin, setIsLogin] = useLocalStorage<boolean | null>('isLogin', false);
+  const isLogin = useStore((state) => state.isLogin);
+  const setIsLogin = useStore((state) => state.setIsLogin);
 
-  const atClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const atClick = () => {
     if (isDarwerOpen && toggleDrawer) {
       toggleDrawer();
     }
@@ -43,7 +43,7 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer, userInfo }: menuDo
   const handleLogOut = () => {
     setOpenMenu(false);
     setIsLogin(false);
-    Cookies.remove('token');
+    setCookie('token', '');
     console.log('logout');
   };
 
@@ -78,7 +78,7 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer, userInfo }: menuDo
               <PersonOutlineIcon />
             </Typography>
             <Typography component="span" color="white">
-              {userInfo.name}
+              {userName}
             </Typography>
           </Box>
         )}

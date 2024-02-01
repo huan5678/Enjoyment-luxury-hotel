@@ -20,12 +20,15 @@ import { get, post, put, del } from '@/utils';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const token = getCookie('token', { cookies }) || '';
+const token = () => {
+  const cookie = getCookie('token', { cookies });
+  return cookie || '';
+};
 
 const config = {
   headers: {
     'Content-Type': 'application/json',
-    Authorization: token,
+    Authorization: token(),
   },
 };
 
@@ -153,7 +156,8 @@ export async function userRegister(data: IUser): Promise<ApiResponse<null> | Aut
   return response;
 }
 
-export async function verifyEmail(email: string): Promise<ApiResponse<{ isEmailExists: boolean } | null>> {
+export async function verifyEmail(email: string): Promise<ApiResponse<{ isEmailExists: boolean } | null>>
+{
   const res = await post(`${baseUrl}/api/v1/verify/email`, { email });
   if (res.status === 400) {
     return {
@@ -164,13 +168,12 @@ export async function verifyEmail(email: string): Promise<ApiResponse<{ isEmailE
   }
   return res.json();
 }
-
-export async function apiCheckUserIsLogin(): Promise<ApiResponse<null> | CheckResponse> {
-  const res = await get<ApiResponse<null> | CheckResponse>(`${baseUrl}/api/v1/user/check`, config);
+export async function apiCheckUserIsLogin(): Promise<CheckResponse>
+{
+  const res = await get<CheckResponse>(`${baseUrl}/api/v1/user/check`, config);
   if (res.status === 403) {
     return {
       status: false,
-      token: undefined,
       message: '請重新登入',
     };
   }
@@ -223,13 +226,11 @@ export async function apiGetCulinary(id: string | undefined): Promise<ApiRespons
 export async function getRoomDetail(roomId: string) {
   const res = await fetch(`${baseUrl}/api/v1/rooms/${roomId}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();
@@ -268,12 +269,12 @@ export async function getOrderDetail(orderId: string) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      Authorization: token(),
     },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();

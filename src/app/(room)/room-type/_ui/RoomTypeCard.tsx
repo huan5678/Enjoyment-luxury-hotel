@@ -22,27 +22,28 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
       <Grid container width="100%">
         <Grid item sm={12} md={12} lg={7}>
           <Swiper
-            className="room-type-swiper"
+            className="hero-section"
             modules={[Pagination, Autoplay]}
+            spaceBetween={0}
+            slidesPerView={1}
             autoplay={{
               delay: 3000,
               disableOnInteraction: false,
             }}
-            spaceBetween={0}
-            slidesPerView={1}
-            onSlideChange={() => console.log('slide change')}
+            pagination={{ clickable: true }}
+            onSlideChange={() => {}}
             onSwiper={(swiper) => console.log(swiper)}>
             <SwiperSlide>
               <Box
                 position={'relative'}
                 sx={{
                   width: '100%',
-                  height: { sm: '351px', md: '351px', lg: '100%' },
-                  maxHeight: { sm: '351px', md: '351px', lg: '457px' },
+                  height: { sm: '200px', md: '200px', lg: '100%' },
+                  maxHeight: { sm: '200px', md: '200px', lg: '457px' },
                   overflow: 'hidden',
                   img: { width: '100%', height: '100%', objectFit: 'cover' },
                 }}>
-                <Image src={props.imageUrl} alt={`${props.name}環境`} layout="fill" objectFit="cover" />
+                <Image width={500} height={500} src={props.imageUrl} alt={`${props.name}環境`} priority={true} />
               </Box>
             </SwiperSlide>
             {props.imageUrlList.map((item, idx) => (
@@ -51,12 +52,12 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
                   position={'relative'}
                   sx={{
                     width: '100%',
-                    height: { sm: '351px', md: '351px', lg: '100%' },
-                    maxHeight: { sm: '351px', md: '351px', lg: '457px' },
+                    height: { sm: '200px', md: '200px', lg: '100%' },
+                    maxHeight: { sm: '200px', md: '200px', lg: '457px' },
                     overflow: 'hidden',
                     img: { width: '100%', height: '100%', objectFit: 'cover' },
                   }}>
-                  <Image src={item} alt={`${props.name}環境-${idx + 1}`} layout="fill" objectFit="cover" />
+                  <Image width={500} height={500} src={item} alt={`${props.name}環境-${idx + 1}`} priority={true} />
                 </Box>
               </SwiperSlide>
             ))}
