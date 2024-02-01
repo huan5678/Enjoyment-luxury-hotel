@@ -4,6 +4,7 @@ import { Avatar, Box, Container, Stack, Typography } from '@mui/material';
 
 import memberBannerBG from '@/assets/images/memberBannerBG.jpg';
 import { useWidth } from '@/hooks';
+import { MemberResponseData } from '@/types';
 
 export const UserBanner = ({data}: {data: MemberResponseData}) => {
   const memberData = data.result;

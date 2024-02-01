@@ -10,6 +10,7 @@ import { getUser } from '@/assets/api';
 import { postOrder } from '@/assets/api';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { OrderPostData } from '@/types';
 
 const Form = styled('form', { shouldForwardProp: () => true })(({ theme }) => ({
   '& .MuiInputBase-root': {
@@ -139,7 +140,9 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
     };
 
     const responseOrderInfo = await postOrder(orderObject);
-    router.push(`/roomBooking/bookingSuccess?id=${responseOrderInfo.result._id}`);
+    if (responseOrderInfo.result !== null) {
+      router.push(`/roomBooking/bookingSuccess?id=${responseOrderInfo.result._id as string}`);
+    }
   }
 
   const onSubmit = (data: bookerData) => {

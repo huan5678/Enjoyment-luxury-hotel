@@ -6,6 +6,7 @@ import Input from '../../components/common/Input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { updateUser } from '@/assets/api';
+import { MemberData } from '@/types';
 
 export const changePasswordDataSchema = z
   .object({

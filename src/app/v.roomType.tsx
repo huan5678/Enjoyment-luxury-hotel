@@ -22,6 +22,7 @@ import WaveImage from '@/assets/images/bg.png';
 import RoomImage from '@/assets/images/room1.png';
 // others
 import { apiGetRoomType } from '@/assets/api';
+import { RoomTypeSchema, RoomTypeResponseData, ApiResponse, IRoom } from '@/types';
 
 const roomBase: RoomTypeSchema = {
   _id: '',
@@ -40,9 +41,9 @@ const roomBase: RoomTypeSchema = {
 };
 
 export default function RoomType() {
-  const [data, setData] = useState<RoomTypeSchema[]>([]);
+  const [data, setData] = useState<IRoom[]>([]);
   const [roomIndex, setRoomIndex] = useState(0);
-  const [room, setRoom] = useState<RoomTypeSchema>(roomBase);
+  const [room, setRoom] = useState<IRoom>(roomBase);
 
   const handleRoom = (next: number) => {
     let newIndex = roomIndex + next;
@@ -53,10 +54,10 @@ export default function RoomType() {
   };
 
   const getRoomTypeList = async () => {
-    await apiGetRoomType().then((res: RoomTypeResponseData) => {
-      if (res.status === true) {
+    await apiGetRoomType().then((res: ApiResponse<IRoom[] | IRoom | null>) => {
+      if (res.status === true && Array.isArray(res.result)) {
         const { result } = res;
-        setData(result);
+        setData(result as IRoom[]);
         const hasData = result.length > 0;
         setRoom(hasData ? result[0] : roomBase);
       }

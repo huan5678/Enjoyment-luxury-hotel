@@ -11,6 +11,7 @@ export interface IOrder {
   status: number;
   createdAt?: string;
   updatedAt?: string;
+  _id?: string;
 }
 
 export interface IOrderRequest {
@@ -18,7 +19,6 @@ export interface IOrderRequest {
   checkInDate: string;
   checkOutDate: string;
   peopleNum: number;
-  orderUserId: string;
   userInfo: IUser;
 }
 

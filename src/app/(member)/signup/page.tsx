@@ -11,7 +11,7 @@ import { userRegister } from '@/assets/api';
 import { formatPhoneNumber } from '@/utils';
 import PasswordForm from './PasswordForm';
 import UserDataForm from '@/app/(member)/UserDataForm';
-import { useLocalStorage } from '@uidotdev/usehooks';
+import { AuthResponse, MemberEditData } from '@/types';
 
 const template = {
   subTitle: '享樂酒店，誠摯歡迎',
@@ -48,21 +48,24 @@ const Page = () => {
   };
 
   const onSubmit = async () => {
-    const res = await userRegister({
-      email: userData.email,
-      password: userData.password as string,
-      name: userData.name,
-      address: {
-        zipcode: userData.address.zipcode,
-        detail: userData.address.detail,
-      },
-      birthday: userData.birthday,
-      phone: userData.phone,
-    });
-    if (res.status === true) {
-      Cookies.set('token', res.token);
-    }
-  };
+  const res = (await userRegister({
+    email: userData.email,
+    password: userData.password as string,
+    name: userData.name,
+    address: {
+      zipcode: userData.address.zipcode,
+      detail: userData.address.detail,
+      county: userData.address.county,
+      city: userData.address.city,
+    },
+    birthday: new Date(userData.birthday || ''),
+    phone: formatPhoneNumber(userData.phone) as string,
+    verificationToken: '',
+  })) as AuthResponse;
+  if (res.status === true) {
+    Cookies.set('token', res.token);
+  }
+};
 
   return (
     <Grid container direction={isSmallDevice ? 'column' : 'row'}>

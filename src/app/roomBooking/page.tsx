@@ -16,6 +16,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { getRoomDetail } from '@/assets/api';
 import { useState, useEffect } from 'react';
 import { timeFormat, calcDays } from './tool';
+import { RoomTypeSchema } from '@/types';
 
 let roomBookData = {
   roomId: '65a4e32683315f6587b0cb47',

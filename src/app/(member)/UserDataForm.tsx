@@ -20,6 +20,7 @@ import countryPhoneCodes from '@/assets/countryPhoneCodes.json';
 import countryFlagEmoji from '@/assets/countryFlagEmoji.json';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formatPhoneNumber, schemaValidate } from '@/utils';
+import { MemberData, MemberEditData } from '@/types';
 
 const Checkbox = styled(BaseCheckbox)(({ theme }) => ({
   color: theme.palette.primary.main,

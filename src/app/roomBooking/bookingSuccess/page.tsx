@@ -13,6 +13,7 @@ import { useSearchParams } from 'next/navigation';
 import { getOrderDetail } from '@/assets/api';
 import { useState, useEffect } from 'react';
 import { calcDays } from '../tool';
+import { OrderInfo } from '@/types';
 
 const initOrderInfo: OrderInfo = {
   status: true,

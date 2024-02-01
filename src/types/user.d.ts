@@ -14,6 +14,8 @@ export interface IUser {
 }
 
 export type Address = {
+  city: string;
+  county: string;
   zipcode: number;
   detail: string;
 };

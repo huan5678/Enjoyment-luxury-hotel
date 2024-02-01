@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { schemaValidate } from '@/utils';
 import { verifyEmail } from '@/assets/api';
+import { MemberEditData } from '@/types';
 
 const passwordFormSchema = z
   .object({
@@ -86,7 +87,7 @@ const PasswordForm = ({
       return;
     }
     const res = await verifyEmail(email);
-    if (res.result.isEmailExists) {
+    if (res.result !== null && res.result.isEmailExists) {
       setError('email', {
         type: 'manual',
         message: '此信箱已被註冊',

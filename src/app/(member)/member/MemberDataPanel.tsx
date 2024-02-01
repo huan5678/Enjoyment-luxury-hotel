@@ -9,6 +9,7 @@ import UserDataForm from '@/app/(member)/UserDataForm';
 import { SubmitHandler } from 'react-hook-form';
 import { updateUser } from '@/assets/api';
 import { formatPhoneNumber } from '@/utils';
+import { MemberResponseData, MemberEditData, MemberUpdateData } from '@/types';
 
 const Page = ({ data }: { data: MemberResponseData }) => {
   const [openForm, setOpenForm] = useState(false);
@@ -36,6 +37,8 @@ const Page = ({ data }: { data: MemberResponseData }) => {
       address: {
         zipcode: data.address.zipcode,
         detail: data.address.detail,
+        county: data.address.county,
+        city: data.address.city,
       },
       birthday: birthday,
     };

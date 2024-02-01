@@ -14,6 +14,8 @@ import {
   IUser,
   MemberData,
   MemberUpdateData,
+  Order,
+  OrderPostData,
   UserLoginData,
 } from '@/types';
 import { get, post, put, del } from '@/utils';
@@ -78,7 +80,7 @@ export async function updateUser(data: MemberUpdateData): Promise<ApiResponse<nu
   return response;
 }
 
-export async function getOrders(id: string | undefined): Promise<ApiResponse<IOrder[] | IOrder | null>> {
+export async function getOrders(id?: string | undefined): Promise<ApiResponse<IOrder[] | IOrder | null>> {
   const res = await get<ApiResponse<IOrder[] | IOrder>>(`${baseUrl}/api/v1/orders${id ? id : null}`, config);
 
   if (res.status === 403) {
@@ -100,7 +102,7 @@ export async function getOrders(id: string | undefined): Promise<ApiResponse<IOr
   return res.json();
 }
 
-export async function deleteOrder(id: string): Promise<ApiResponse<IOrder | null>> {
+export async function deleteOrder(id?: string | undefined): Promise<ApiResponse<IOrder | null>> {
   const res = await del<ApiResponse<IOrder | null>>(`${baseUrl}/api/v1/orders/${id}`, config);
 
   if (res.status === 403) {
@@ -156,8 +158,7 @@ export async function userRegister(data: IUser): Promise<ApiResponse<null> | Aut
   return response;
 }
 
-export async function verifyEmail(email: string): Promise<ApiResponse<{ isEmailExists: boolean } | null>>
-{
+export async function verifyEmail(email: string): Promise<ApiResponse<{ isEmailExists: boolean } | null>> {
   const res = await post(`${baseUrl}/api/v1/verify/email`, { email });
   if (res.status === 400) {
     return {
@@ -168,8 +169,7 @@ export async function verifyEmail(email: string): Promise<ApiResponse<{ isEmailE
   }
   return res.json();
 }
-export async function apiCheckUserIsLogin(): Promise<CheckResponse>
-{
+export async function apiCheckUserIsLogin(): Promise<CheckResponse> {
   const res = await get<CheckResponse>(`${baseUrl}/api/v1/user/check`, config);
   if (res.status === 403) {
     return {
@@ -182,7 +182,7 @@ export async function apiCheckUserIsLogin(): Promise<CheckResponse>
   return response;
 }
 
-export async function apiGetNews(id: string | undefined): Promise<ApiResponse<INews[] | INews | null>> {
+export async function apiGetNews(id?: string | undefined): Promise<ApiResponse<INews[] | INews | null>> {
   const res = await get<ApiResponse<INews[] | INews | null>>(`${baseUrl}/api/v1/home/news/${id ? id : null}`);
   if (res.status === 404) {
     return {
@@ -195,7 +195,7 @@ export async function apiGetNews(id: string | undefined): Promise<ApiResponse<IN
   return res.json();
 }
 
-export async function apiGetRoomType(id: string | undefined): Promise<ApiResponse<IRoom[] | IRoom | null>> {
+export async function apiGetRoomType(id?: string | undefined): Promise<ApiResponse<IRoom[] | IRoom | null>> {
   const res = await get<ApiResponse<IRoom[] | IRoom | null>>(`${baseUrl}/api/v1/rooms/${id ? id : null}`);
   if (res.status === 404) {
     return {
@@ -208,7 +208,7 @@ export async function apiGetRoomType(id: string | undefined): Promise<ApiRespons
   return res.json();
 }
 
-export async function apiGetCulinary(id: string | undefined): Promise<ApiResponse<ICulinary[] | ICulinary | null>> {
+export async function apiGetCulinary(id?: string | undefined): Promise<ApiResponse<ICulinary[] | ICulinary | null>> {
   const res = await get<ApiResponse<ICulinary[] | ICulinary | null>>(
     `${baseUrl}/api/v1/home/culinary/${id ? id : null}`,
   );
@@ -236,8 +236,8 @@ export async function getRoomDetail(roomId: string) {
   return res.json();
 }
 
-export async function postOrder(data: IOrderRequest): Promise<ApiResponse<IOrder | null>> {
-  const res = await post<ApiResponse<IOrder | null>>(`${baseUrl}/api/v1/orders`, data, config);
+export async function postOrder(data: OrderPostData): Promise<ApiResponse<Order | null>> {
+  const res = await post<ApiResponse<Order | null>>(`${baseUrl}/api/v1/orders`, data, config);
   switch (res.status) {
     case 400:
       return {

@@ -19,6 +19,7 @@ import Loader from '@/components/common/Loader';
 import Menu from '@/app/c.menu';
 // others
 import { apiCheckUserIsLogin, getUser } from '@/assets/api';
+import { MemberResponseData, CheckLoginSchema, MemberData, ApiResponse, AuthResponse, CheckResponse } from '@/types';
 
 function HideOnScroll({ children, window }: { children: React.ReactElement; window?: () => Window }) {
   const trigger = useScrollTrigger({
@@ -66,15 +67,15 @@ export default function Header(props: any) {
   };
 
   const getUserInfo = async () => {
-    await getUser().then((res: MemberResponseData) => {
-      if (res.status === true) setUserName(res.result.name);
+    await getUser().then((res: ApiResponse<null> | AuthResponse) => {
+      if (res.status === true && res.status !== null) setUserName(res.result?.name as string);
     });
   };
 
   const getUserIsLogin = async () => {
     setIsLoading(true);
     await apiCheckUserIsLogin()
-      .then((res: CheckLoginSchema) => {
+      .then((res: CheckResponse) => {
         setIsLogin(res.status);
       })
       .finally(() => {
