@@ -16,7 +16,7 @@ export default function RoomFacilityBlock(props: RoomFacilityBlockProp) {
       {facilities.map(
         (item) =>
           item.isProvide && (
-            <Grid item sm={6} md={4} lg={2.4} key={item.title}>
+            <Grid item sm={6} md={4} key={item.title}>
               <Stack direction="row">
                 <Check color="primary" sx={{ fontSize: 24 }} />
                 <Typography variant="title" ml={1}>
