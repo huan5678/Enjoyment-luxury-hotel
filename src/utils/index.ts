@@ -1,5 +1,5 @@
 import { z, ZodType } from 'zod';
-import Cookies from 'js-cookie';
+import { HttpResponse } from '@/types';
 
 export function formatPhoneNumber(phoneNumber: string | number) {
   // 移除所有非數字字符
@@ -50,4 +50,33 @@ export function schemaValidate(key: keyof typeof schema.shape) {
     birthdayDay: z.number().min(1).max(31),
   });
   return schema.shape[key];
+}
+
+async function http<T>(request: Request): Promise<HttpResponse<T>> {
+  const response = await fetch(request);
+  const body = await response.json();
+  return body;
+}
+
+export async function get<T>(path: string, args: RequestInit = { method: 'GET' }): Promise<HttpResponse<T>> {
+  return await http<T>(new Request(path, args));
+}
+
+export async function post<T>(
+  path: string,
+  body: any,
+  args: RequestInit = { method: 'POST', body: JSON.stringify(body) },
+): Promise<HttpResponse<T>> {
+  return await http<T>(new Request(path, args));
+}
+
+export async function put<T>(
+  path: string,
+  body: any,
+  args: RequestInit = { method: 'PUT', body: JSON.stringify(body) },
+): Promise<HttpResponse<T>> {
+  return await http<T>(new Request(path, args));
+}
+export async function del<T>(path: string, args: RequestInit = { method: 'DELETE' }): Promise<HttpResponse<T>> {
+  return await http<T>(new Request(path, args));
 }

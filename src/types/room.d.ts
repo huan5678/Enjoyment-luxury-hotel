@@ -1,3 +1,23 @@
+export type IItem = {
+  title: string;
+  isProvide: boolean;
+};
+
+export interface IRoom {
+  name: string;
+  description: string;
+  imageUrl: string;
+  imageUrlList: string[];
+  areaInfo: string;
+  bedInfo: string;
+  maxPeople: number;
+  price: number;
+  status: number;
+  layoutInfo: IItem[];
+  facilityInfo: IItem[];
+  amenityInfo: IItem[];
+}
+
 type RoomInfoSchema = {
   title: string;
   isProvide: boolean;
