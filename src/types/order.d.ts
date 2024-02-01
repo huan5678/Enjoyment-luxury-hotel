@@ -1,3 +1,27 @@
+import { IRoom } from './room';
+import { IUser } from './user';
+
+export interface IOrder {
+  roomId: IRoom;
+  checkInDate: Date;
+  checkOutDate: Date;
+  peopleNum: number;
+  orderUserId: string;
+  userInfo: IUser;
+  status: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface IOrderRequest {
+  roomId: string;
+  checkInDate: string;
+  checkOutDate: string;
+  peopleNum: number;
+  orderUserId: string;
+  userInfo: IUser;
+}
+
 type FacilityInfo = {
   title: string;
   isProvide: boolean;
@@ -62,46 +86,46 @@ type OrderPostData = {
 };
 
 type OrderInfo = {
-  status: boolean,
+  status: boolean;
   result: {
     userInfo: {
       address: {
-        zipcode: number,
-        detail: string,
-      },
-      name: string,
-      phone: string,
-      email: string,
-    },
-    _id: string,
+        zipcode: number;
+        detail: string;
+      };
+      name: string;
+      phone: string;
+      email: string;
+    };
+    _id: string;
     roomId: {
-      name: string,
-      description: string,
-      imageUrl: string,
-      imageUrlList: string[],
-      areaInfo: string,
-      bedInfo: string,
-      maxPeople: number,
-      price: number,
-      status: number,
+      name: string;
+      description: string;
+      imageUrl: string;
+      imageUrlList: string[];
+      areaInfo: string;
+      bedInfo: string;
+      maxPeople: number;
+      price: number;
+      status: number;
       layoutInfo: [
         {
-          title: string,
-          isProvide: boolean,
+          title: string;
+          isProvide: boolean;
         },
-      ],
-      facilityInfo: FacilityInfo[],
-      amenityInfo: AmenityInfo[],
-      _id: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    checkInDate: string,
-    checkOutDate: string,
-    peopleNum: number,
-    orderUserId: string,
-    status: number,
-    createdAt: string,
-    updatedAt: string,
-  },
+      ];
+      facilityInfo: FacilityInfo[];
+      amenityInfo: AmenityInfo[];
+      _id: string;
+      createdAt: string;
+      updatedAt: string;
+    };
+    checkInDate: string;
+    checkOutDate: string;
+    peopleNum: number;
+    orderUserId: string;
+    status: number;
+    createdAt: string;
+    updatedAt: string;
+  };
 };

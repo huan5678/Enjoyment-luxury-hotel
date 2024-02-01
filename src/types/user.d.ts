@@ -1,16 +1,31 @@
-type Address = {
+export interface IUser {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  birthday: Date;
+  address: {
+    zipcode: number;
+    detail: string;
+    county: string;
+    city: string;
+  };
+  verificationToken: string;
+}
+
+export type Address = {
   zipcode: number;
   detail: string;
 };
 
-type UserInfo = {
+export type UserInfo = {
   address: Address;
   name: string;
   phone: string;
   email: string;
 };
 
-type MemberData = UserInfo & {
+export type MemberData = UserInfo & {
   _id?: string;
   password: string;
   birthday: string;
@@ -19,32 +34,32 @@ type MemberData = UserInfo & {
   updatedAt?: string;
 };
 
-type MemberResponseData = {
+export type MemberResponseData = {
   status: boolean;
   token: string;
   result: MemberData;
 };
 
-type MemberPassword = {
+export type MemberPassword = {
   oldPassword?: string;
   newPassword?: string;
   confirmPassword?: string;
   password?: string;
 };
 
-type MemberUpdateData = UserInfo &
+export type MemberUpdateData = UserInfo &
   MemberPassword & {
     _id?: string;
     address?: Address;
     birthday?: string;
   };
 
-type UserLoginData = {
+export type UserLoginData = {
   email: string | null;
   password: string;
 };
 
-type MemberEditData = MemberUpdateData & {
+export type MemberEditData = MemberUpdateData & {
   city: string;
   countryPhoneCode: string;
   birthdayYear: number;
@@ -53,12 +68,12 @@ type MemberEditData = MemberUpdateData & {
   check?: boolean;
 };
 
-type UserRegisterData = UserInfo & {
+export type UserRegisterData = UserInfo & {
   password?: string;
   birthday?: string;
 };
 
-type CheckLoginSchema = {
+export type CheckLoginSchema = {
   status: boolean;
   token: string;
 };

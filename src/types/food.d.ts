@@ -1,4 +1,14 @@
-type FoodTypeSchema = {
+export interface ICulinary {
+  title: string;
+  description: string;
+  diningTime: string;
+  image: string;
+  _id?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type FoodTypeSchema = {
   _id: string;
   title: string;
   description: string;
@@ -8,7 +18,7 @@ type FoodTypeSchema = {
   updatedAt?: string;
 };
 
-type FoodTypeResponseData = {
+export type FoodTypeResponseData = {
   status: boolean;
   result: FoodTypeSchema[];
 };
