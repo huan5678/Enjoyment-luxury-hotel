@@ -4,19 +4,42 @@ import Image from 'next/image';
 import Link from 'next/link';
 import moment, { Moment } from 'moment';
 import { useState } from 'react';
-import { Box, Button, Card, Container, Grid, IconButton, Paper, Stack, Typography } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  Card,
+  Dialog,
+  DialogContent,
+  Grid,
+  IconButton,
+  Paper,
+  Stack,
+  SwipeableDrawer,
+  Typography,
+} from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import Close from '@mui/icons-material/Close';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline';
 //
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+// swiper
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/autoplay';
 //
 import Headline from '@/components/common/Headline';
 import RoomFacilityBlock from '@/components/room/RoomFacilityBlock';
 import RoomBaseInfoBlock from '@/components/room/RoomBaseInfoBlock';
+import { roomRules } from '@/assets/roomRules';
 //
 import { RoomInfo } from '../_domain/index';
 
@@ -50,6 +73,7 @@ export default function Page({ data }: any) {
    */
   const [checkInDate, setCheckInDate] = useState<Moment | null>(moment());
   const [checkOutDate, setCheckOutDate] = useState<Moment | null>(moment().add(1, 'd'));
+  const stayNum = checkOutDate?.diff(checkInDate, 'days');
 
   /**
    * 整理要給預定頁面的資料
@@ -62,37 +86,47 @@ export default function Page({ data }: any) {
   };
   // console.log('adjustData', adjustData);
 
-  const rules = [
-    '入住時間為下午3點，退房時間為上午12點。',
-    '如需延遲退房，請提前與櫃檯人員聯繫，視當日房況可能會產生額外費用。',
-    '請勿在房間內抽煙，若有抽煙需求，可以使用設在酒店各樓層的專用吸煙區。',
-    '若發現房間內的設施有損壞或遺失，將會按照價值收取賠償金。',
-    '請愛惜我們的房間與公共空間，並保持整潔。',
-    '如需額外的毛巾、盥洗用品或其他物品，請聯繫櫃檯。',
-    '我們提供免費的Wi-Fi，密碼可以在櫃檯或是房間內的資訊卡上找到。',
-    '請勿帶走酒店房內的物品，如有需要購買，請與我們的櫃檯人員聯繫。',
-    '我們提供24小時櫃檯服務，若有任何需求或疑問，歡迎隨時詢問。',
-    '為了確保所有客人的安全，請勿在走廊或公共區域大聲喧嘩，並遵守酒店的其他規定。',
-  ];
+  // mobile
+  const [open, setOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setDrawerOpen(newOpen);
+  };
+  const handleConfirmDate = () => {
+    setOpen(false);
+    setDrawerOpen(true);
+  };
 
   return (
     <>
-      <Box component="section" py="5rem" px="3.75rem" sx={{ backgroundColor: '#f7f2ee' }}>
-        <Grid container direction="row" overflow="hidden" sx={{ borderRadius: '20px' }} position="relative">
+      {/* Main View */}
+      <Box
+        component="section"
+        py="5rem"
+        px="3.75rem"
+        sx={{
+          display: { sm: 'none', md: 'block' },
+          backgroundColor: '#f7f2ee',
+        }}>
+        <Grid container direction="row" overflow="hidden" height="600px">
           <Grid item sm={6}>
-            <Box
-              position={'relative'}
-              sx={{
-                width: '100%',
-                height: '100%',
-                overflow: 'hidden',
-                img: { width: '100%', height: '100%', objectFit: 'cover' },
-              }}>
-              <Image width={500} height={500} src={result.imageUrl} alt={`${result.name}環境`} priority={true} />
-            </Box>
+            <Grid container direction="row" spacing={1} sx={{ width: '100%', height: '100%' }}>
+              <Grid item sm={12}>
+                <Box
+                  position={'relative'}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden',
+                    img: { width: '100%', height: '100%', objectFit: 'cover' },
+                  }}>
+                  <Image width={500} height={500} src={result.imageUrl} alt={`${result.name}環境`} priority={true} />
+                </Box>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item sm={6}>
-            <Grid container direction="row" sx={{ width: '100%', height: '100%' }}>
+            <Grid container direction="row" spacing={1} sx={{ width: '100%', height: '100%' }}>
               {result.imageUrlList.map((item: string, idx: number) => (
                 <Grid item sm={6} height="50%" key={idx + 1}>
                   <Box
@@ -110,18 +144,54 @@ export default function Page({ data }: any) {
             </Grid>
           </Grid>
         </Grid>
-        {/* <Button
-          disableElevation
-          variant="outlined"
-          sx={{ position: 'absolute', right: '80px', bottom: '0px', p: '1rem 2rem' }}>
-          看更多
-        </Button> */}
       </Box>
+      <Box component="section" sx={{ display: { sm: 'block', md: 'none' } }}>
+        <Swiper
+          className="hero-section"
+          modules={[Pagination, Autoplay]}
+          spaceBetween={0}
+          slidesPerView={1}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          pagination={{ clickable: true }}
+          onSlideChange={() => {}}
+          onSwiper={(swiper) => console.log(swiper)}>
+          <SwiperSlide>
+            <Box
+              position={'relative'}
+              sx={{
+                width: '100%',
+                height: '250px',
+                overflow: 'hidden',
+                img: { width: '100%', height: '100%', objectFit: 'cover' },
+              }}>
+              <Image src={result.imageUrl} alt={`${result.name}環境`} layout="fill" objectFit="cover" />
+            </Box>
+          </SwiperSlide>
+          {result.imageUrlList.map((item: string, idx: number) => (
+            <SwiperSlide key={idx + 1}>
+              <Box
+                position={'relative'}
+                sx={{
+                  width: '100%',
+                  height: '250px',
+                  overflow: 'hidden',
+                  img: { width: '100%', height: '100%', objectFit: 'cover' },
+                }}>
+                <Image src={item} alt={`${result.name}環境-${idx + 1}`} layout="fill" objectFit="cover" />
+              </Box>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </Box>
+      {/* Detail Info */}
       <Box width="100%" sx={{ backgroundColor: '#f7f2ee' }}>
         <Container>
           <Paper elevation={0} sx={{ py: matches ? 5 : '120px', backgroundColor: 'transparent' }}>
-            <Grid container direction="row" spacing={9}>
-              <Grid item sm={8}>
+            <Grid container direction="row" spacing={6}>
+              <Grid item sm={12} md={8}>
                 <Stack spacing={matches ? 3 : 10}>
                   <Box component="section">
                     <Typography component="div" variant="h2">
@@ -192,7 +262,7 @@ export default function Page({ data }: any) {
                   <Box component="section">
                     <Headline title="訂房須知"></Headline>
                     <Box sx={{ width: '100%', mt: { sm: 2, md: 3 } }}>
-                      {rules.map((line, idx) => (
+                      {roomRules.map((line: string, idx: number) => (
                         <Stack direction="row" key={idx + 1}>
                           <Box minWidth="1.5rem">
                             <Typography variant={matches ? 'body2' : 'body1'} color="#4B4B4">
@@ -210,7 +280,7 @@ export default function Page({ data }: any) {
                   </Box>
                 </Stack>
               </Grid>
-              <Grid item sm={4}>
+              <Grid item md={4} sx={{ display: { sm: 'none', md: 'block' } }}>
                 <Card elevation={0} sx={{ p: 5, borderRadius: '1.25rem' }}>
                   <Stack spacing={5}>
                     <Typography component="div" variant="h5" pb={2} sx={{ borderBottom: '1px solid #ECECEC' }}>
@@ -278,7 +348,7 @@ export default function Page({ data }: any) {
                     {/* 價格 */}
                     <Typography
                       component="div"
-                      color="primary.main"
+                      color="primary"
                       sx={{
                         fontSize: { sm: '1rem', md: '1.5rem' },
                         fontWeight: 700,
@@ -306,6 +376,166 @@ export default function Page({ data }: any) {
           </Paper>
         </Container>
       </Box>
+      {/* Mobile */}
+      <Paper elevation={0} sx={{ display: { sm: 'block', md: 'none' } }}>
+        <AppBar
+          position="fixed"
+          sx={{
+            top: 'auto',
+            bottom: 0,
+            p: '12px',
+            backgroundColor: '#fff',
+            borderTop: '1px solid #ECECEC',
+            display: { sm: 'block', md: 'none' },
+          }}>
+          <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Typography
+              component="div"
+              color="primary"
+              sx={{
+                fontSize: '0.875rem',
+                fontWeight: 500,
+              }}>
+              {`NT$ ${result.price.toLocaleString()}`}
+            </Typography>
+            <Button
+              variant="contained"
+              disableElevation
+              sx={{ width: '100%', maxWidth: '194px', px: 4, py: 2, borderRadius: '0.5rem' }}
+              onClick={() => setOpen(true)}>
+              查看可訂日期
+            </Button>
+          </Box>
+        </AppBar>
+        <Dialog fullScreen open={open} onClose={() => setOpen(false)} sx={{ display: { sm: 'block', md: 'none' } }}>
+          <AppBar elevation={0} sx={{ height: '36px', position: 'relative' }}></AppBar>
+          <Stack direction="column" alignItems="flex-start" sx={{ p: 3, backgroundColor: '#ECECEC' }}>
+            <IconButton edge="start" onClick={() => setOpen(false)} aria-label="關閉">
+              <Close />
+            </IconButton>
+            <Typography variant="h6">選擇住宿日期</Typography>
+            <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
+              <Typography component="div" variant="h6">
+                {stayNum}晚
+              </Typography>
+              <Typography
+                component="div"
+                sx={{
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                }}>
+                {`${moment(checkInDate).format('YYYY/MM/DD')}-${moment(checkOutDate).format('YYYY/MM/DD')}`}
+              </Typography>
+            </Stack>
+          </Stack>
+          <DialogContent sx={{ pb: '80px' }}>
+            <Typography variant="h6" color="primary">
+              入住日期
+            </Typography>
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <DateCalendar
+                showDaysOutsideCurrentMonth
+                fixedWeekNumber={6}
+                defaultValue={checkInDate}
+                onChange={(newValue) => setCheckInDate(newValue)}
+              />
+            </LocalizationProvider>
+            <Typography variant="h6" color="primary">
+              退房日期
+            </Typography>
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <DateCalendar
+                showDaysOutsideCurrentMonth
+                fixedWeekNumber={6}
+                defaultValue={checkOutDate}
+                onChange={(newValue) => setCheckOutDate(newValue)}
+              />
+            </LocalizationProvider>
+          </DialogContent>
+          <AppBar
+            position="fixed"
+            sx={{ top: 'auto', bottom: 0, p: '12px', backgroundColor: '#fff', borderTop: '1px solid #ECECEC' }}>
+            <Box display="flex" flexDirection="row" justifyContent="flex-end">
+              <Button
+                variant="contained"
+                disableElevation
+                disabled={stayNum && stayNum > 0 ? false : true}
+                sx={{ width: '100%', maxWidth: '194px', px: 4, py: 2, borderRadius: '0.5rem' }}
+                onClick={handleConfirmDate}>
+                確定日期
+              </Button>
+            </Box>
+          </AppBar>
+        </Dialog>
+        <SwipeableDrawer
+          anchor="bottom"
+          open={drawerOpen}
+          onClose={toggleDrawer(false)}
+          onOpen={toggleDrawer(true)}
+          disableSwipeToOpen={false}
+          ModalProps={{
+            keepMounted: true,
+          }}
+          sx={{ display: { sm: 'block', md: 'none' } }}>
+          <Stack direction="column" alignItems="flex-start" sx={{ p: 3, bgColor: '#ECECEC' }}>
+            <IconButton edge="start" onClick={() => setDrawerOpen(false)} aria-label="關閉">
+              <Close />
+            </IconButton>
+            <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
+              <Typography component="div" variant="h6">
+                {stayNum}晚
+              </Typography>
+              <Typography
+                component="div"
+                sx={{
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                }}>
+                {`${moment(checkInDate).format('YYYY/MM/DD')}-${moment(checkOutDate).format('YYYY/MM/DD')}`}
+              </Typography>
+            </Stack>
+          </Stack>
+          <Paper elevation={0} sx={{ px: 3, pb: 3 }}>
+            <Typography>選擇人數</Typography>
+            <Typography>此房型最多供{result.maxPeople}人居住，不接受寵物入住。</Typography>
+            <Stack spacing={1} direction="row" alignItems="center">
+              <IconButton aria-label="減少人數" disabled={!isAllowSub} onClick={() => handleCounts('sub')}>
+                <RemoveCircleOutline
+                  sx={{
+                    fontSize: '40px',
+                  }}
+                />
+              </IconButton>
+              <Typography variant="h6">{peopleNum}</Typography>
+              <IconButton aria-label="增加人數" disabled={!isAllowAdd} onClick={() => handleCounts('add')}>
+                <AddCircleOutline
+                  sx={{
+                    fontSize: '40px',
+                  }}
+                />
+              </IconButton>
+            </Stack>
+          </Paper>
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="flex-end"
+            sx={{ p: '12px', bgColor: '#fff', borderTop: '1px solid #ECECEC' }}>
+            <Link
+              href={{
+                pathname: '/roomBooking',
+                query: adjustData,
+              }}>
+              <Button
+                variant="contained"
+                disableElevation
+                sx={{ width: '194px', px: 4, py: 2, borderRadius: '0.5rem' }}>
+                儲存
+              </Button>
+            </Link>
+          </Box>
+        </SwipeableDrawer>
+      </Paper>
     </>
   );
 }

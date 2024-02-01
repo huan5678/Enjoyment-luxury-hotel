@@ -26,7 +26,7 @@ export default function RoomBaseInfoBlock(props: {
   ];
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={{ sm: 1, md: 2 }} flexWrap="nowrap">
       {graphicalData.map((item) => (
         <Grid item key={item.title}>
           <SquareCard title={item.title} isBorder={props.isBorder}>
