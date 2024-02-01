@@ -29,6 +29,12 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+// swiper
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/autoplay';
 //
 import Headline from '@/components/common/Headline';
 import RoomFacilityBlock from '@/components/room/RoomFacilityBlock';
@@ -94,22 +100,33 @@ export default function Page({ data }: any) {
   return (
     <>
       {/* Main View */}
-      <Box component="section" py="5rem" px="3.75rem" sx={{ display: { sm: 'none' }, backgroundColor: '#f7f2ee' }}>
-        <Grid container direction="row" overflow="hidden" sx={{ borderRadius: '20px' }} position="relative">
+      <Box
+        component="section"
+        py="5rem"
+        px="3.75rem"
+        sx={{
+          display: { sm: 'none', md: 'block' },
+          backgroundColor: '#f7f2ee',
+        }}>
+        <Grid container direction="row" overflow="hidden" height="600px">
           <Grid item sm={6}>
-            <Box
-              position={'relative'}
-              sx={{
-                width: '100%',
-                height: '100%',
-                overflow: 'hidden',
-                img: { width: '100%', height: '100%', objectFit: 'cover' },
-              }}>
-              <Image width={500} height={500} src={result.imageUrl} alt={`${result.name}環境`} priority={true} />
-            </Box>
+            <Grid container direction="row" spacing={1} sx={{ width: '100%', height: '100%' }}>
+              <Grid item sm={12}>
+                <Box
+                  position={'relative'}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden',
+                    img: { width: '100%', height: '100%', objectFit: 'cover' },
+                  }}>
+                  <Image width={500} height={500} src={result.imageUrl} alt={`${result.name}環境`} priority={true} />
+                </Box>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item sm={6}>
-            <Grid container direction="row" sx={{ width: '100%', height: '100%' }}>
+            <Grid container direction="row" spacing={1} sx={{ width: '100%', height: '100%' }}>
               {result.imageUrlList.map((item: string, idx: number) => (
                 <Grid item sm={6} height="50%" key={idx + 1}>
                   <Box
@@ -127,12 +144,47 @@ export default function Page({ data }: any) {
             </Grid>
           </Grid>
         </Grid>
-        {/* <Button
-          disableElevation
-          variant="outlined"
-          sx={{ position: 'absolute', right: '80px', bottom: '0px', p: '1rem 2rem' }}>
-          看更多
-        </Button> */}
+      </Box>
+      <Box component="section" sx={{ display: { sm: 'block', md: 'none' } }}>
+        <Swiper
+          className="hero-section"
+          modules={[Pagination, Autoplay]}
+          spaceBetween={0}
+          slidesPerView={1}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          pagination={{ clickable: true }}
+          onSlideChange={() => {}}
+          onSwiper={(swiper) => console.log(swiper)}>
+          <SwiperSlide>
+            <Box
+              position={'relative'}
+              sx={{
+                width: '100%',
+                height: '250px',
+                overflow: 'hidden',
+                img: { width: '100%', height: '100%', objectFit: 'cover' },
+              }}>
+              <Image src={result.imageUrl} alt={`${result.name}環境`} layout="fill" objectFit="cover" />
+            </Box>
+          </SwiperSlide>
+          {result.imageUrlList.map((item: string, idx: number) => (
+            <SwiperSlide key={idx + 1}>
+              <Box
+                position={'relative'}
+                sx={{
+                  width: '100%',
+                  height: '250px',
+                  overflow: 'hidden',
+                  img: { width: '100%', height: '100%', objectFit: 'cover' },
+                }}>
+                <Image src={item} alt={`${result.name}環境-${idx + 1}`} layout="fill" objectFit="cover" />
+              </Box>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </Box>
       {/* Detail Info */}
       <Box width="100%" sx={{ backgroundColor: '#f7f2ee' }}>
@@ -328,7 +380,14 @@ export default function Page({ data }: any) {
       <Paper elevation={0} sx={{ display: { sm: 'block', md: 'none' } }}>
         <AppBar
           position="fixed"
-          sx={{ top: 'auto', bottom: 0, p: '12px', backgroundColor: '#fff', borderTop: '1px solid #ECECEC' }}>
+          sx={{
+            top: 'auto',
+            bottom: 0,
+            p: '12px',
+            backgroundColor: '#fff',
+            borderTop: '1px solid #ECECEC',
+            display: { sm: 'block', md: 'none' },
+          }}>
           <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
             <Typography
               component="div"
@@ -348,7 +407,7 @@ export default function Page({ data }: any) {
             </Button>
           </Box>
         </AppBar>
-        <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
+        <Dialog fullScreen open={open} onClose={() => setOpen(false)} sx={{ display: { sm: 'block', md: 'none' } }}>
           <AppBar elevation={0} sx={{ height: '36px', position: 'relative' }}></AppBar>
           <Stack direction="column" alignItems="flex-start" sx={{ p: 3, backgroundColor: '#ECECEC' }}>
             <IconButton edge="start" onClick={() => setOpen(false)} aria-label="關閉">
@@ -416,7 +475,8 @@ export default function Page({ data }: any) {
           disableSwipeToOpen={false}
           ModalProps={{
             keepMounted: true,
-          }}>
+          }}
+          sx={{ display: { sm: 'block', md: 'none' } }}>
           <Stack direction="column" alignItems="flex-start" sx={{ p: 3, bgColor: '#ECECEC' }}>
             <IconButton edge="start" onClick={() => setDrawerOpen(false)} aria-label="關閉">
               <Close />
