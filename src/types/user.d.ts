@@ -1,3 +1,5 @@
+import { ApiResponse } from './api';
+
 export interface IUser {
   name: string;
   email: string;
@@ -78,4 +80,8 @@ export type UserRegisterData = UserInfo & {
 export type CheckLoginSchema = {
   status: boolean;
   token: string;
+};
+
+export type UserResponse = ApiResponse<MemberData> & {
+  token?: string;
 };

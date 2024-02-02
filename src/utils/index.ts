@@ -1,5 +1,5 @@
 import { z, ZodType } from 'zod';
-import { HttpResponse } from '@/types';
+import { StatusCode, ApiResponse } from '@/types';
 
 export function formatPhoneNumber(phoneNumber: string | number) {
   // 移除所有非數字字符
@@ -52,31 +52,57 @@ export function schemaValidate(key: keyof typeof schema.shape) {
   return schema.shape[key];
 }
 
-async function http<T>(request: Request): Promise<HttpResponse<T>> {
+async function http<T>(request: Request): Promise<T> {
   const response = await fetch(request);
-  const body = await response.json();
-  return body;
+  const body: T = await response.json();
+  return {
+    ...body,
+    statusCode: response.status,
+  };
 }
 
-export async function get<T>(path: string, args: RequestInit = { method: 'GET' }): Promise<HttpResponse<T>> {
-  return await http<T>(new Request(path, args));
-}
-
-export async function post<T>(
-  path: string,
-  body: any,
-  args: RequestInit = { method: 'POST', body: JSON.stringify(body) },
-): Promise<HttpResponse<T>> {
+export async function get<T>(path: string, args: RequestInit = { method: 'GET' }): Promise<T> {
   return await http<T>(new Request(path, args));
 }
 
-export async function put<T>(
-  path: string,
-  body: any,
-  args: RequestInit = { method: 'PUT', body: JSON.stringify(body) },
-): Promise<HttpResponse<T>> {
+export async function post<T>(path: string, body: any, args: RequestInit = {}): Promise<T> {
+  const defaultArgs: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+  const finalArgs = { ...defaultArgs, ...args, headers: { ...defaultArgs.headers, ...args.headers } };
+  return await http<T>(new Request(path, finalArgs));
+}
+
+export async function put<T>(path: string, body: any, args: RequestInit = {}): Promise<T> {
+  const defaultArgs: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+  const finalArgs = { ...defaultArgs, ...args, headers: { ...defaultArgs.headers, ...args.headers } };
+  return await http<T>(new Request(path, finalArgs));
+}
+export async function del<T>(path: string, args: RequestInit = { method: 'DELETE' }): Promise<T> {
   return await http<T>(new Request(path, args));
 }
-export async function del<T>(path: string, args: RequestInit = { method: 'DELETE' }): Promise<HttpResponse<T>> {
-  return await http<T>(new Request(path, args));
+
+export function handleApiResponse<T>(res: ApiResponse<T>): ApiResponse<T | null> {
+  const { statusCode, status, message } = res;
+
+  if (statusCode !== undefined && [400, 403, 404].includes(statusCode)) {
+    return {
+      statusCode,
+      status,
+      message,
+      result: null,
+    };
+  }
+
+  return res;
 }

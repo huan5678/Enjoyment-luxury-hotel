@@ -20,12 +20,17 @@ export default function FoodType() {
 
   const getFoodType = async () => {
     await apiGetCulinary().then((res: ApiResponse<ICulinary[] | ICulinary | null>) => {
-      if (res.status === true && Array.isArray(res.status)) setData(res.result as FoodTypeSchema[]);
+      if (res.status === true && Array.isArray(res.result)) {
+        setData(res.result as FoodTypeSchema[]);
+      }
     });
   };
 
   useEffect(() => {
-    getFoodType();
+    async function fetchData() {
+      await getFoodType();
+    }
+    fetchData();
     // eslint-disable-next-line
   }, []);
 
