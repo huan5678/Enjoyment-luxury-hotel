@@ -9,6 +9,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SquareCard from '@/components/room/SquareCard';
 import Headline from '@/app/roomBooking/Headline';
 import type { NextPage } from 'next';
+import { Suspense } from 'react';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import BookerForm from './BookerForm';
@@ -135,7 +136,7 @@ const RoomBooking: NextPage = () => {
   }
 
   return (
-    <>
+    <Suspense>
       <Box
         className="container"
         bgcolor="
@@ -331,7 +332,7 @@ const RoomBooking: NextPage = () => {
           </Stack>
         </Container>
       </Box>
-    </>
+    </Suspense>
   );
 };
 

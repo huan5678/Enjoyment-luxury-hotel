@@ -121,7 +121,7 @@ const UserDataForm = ({
   const handleOnsSubmit = () => {
     if (isRegister && setData) {
       const data = watch();
-      const resultPhone = data.phone[0] === '0' ? data.phone.slice(1) : data.phone;
+      const resultPhone = data.phone[0] === '0' ? data.phone.slice(1) : data.phone || 0;
       const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone)}`;
       setData((prev) => {
         return {

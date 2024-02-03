@@ -4,13 +4,14 @@ import * as React from 'react';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import type { NextPage } from 'next';
+import { Suspense } from 'react';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import HorizontalWave from '@/components/common/HorizontalWave';
 import Headline from '@/app/roomBooking/Headline';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { getOrderDetail, getOrders } from '@/assets/api';
+import { getOrders } from '@/assets/api';
 import { useState, useEffect } from 'react';
 import { calcDays } from '../tool';
 import { OrderInfo } from '@/types';
@@ -97,8 +98,10 @@ const BookingSuccess: NextPage = () => {
     })();
   }, []);
 
+  if (!orderInfo.result) return <></>;
+
   return (
-    <>
+    <Suspense>
       <Box sx={{ color: '#ffffff' }}>
         <Container>
           <Stack direction={{ md: 'column', lg: 'row' }} justifyContent={{ md: 'center', lg: 'space-between' }}>
@@ -125,7 +128,7 @@ const BookingSuccess: NextPage = () => {
                     <Check sx={{ fontSize: 40, color: '#ffffff' }} />
                   </Stack>
                   <Typography component="h2" fontSize={{ sm: '32px', md: '40px' }} fontWeight={700}>
-                    恭喜，{orderInfo.result.userInfo.name}！
+                    恭喜，{orderInfo.result.userInfo?.name}！
                     <br />
                     您已預訂成功
                   </Typography>
@@ -139,11 +142,11 @@ const BookingSuccess: NextPage = () => {
                   立即查看您的訂單紀錄
                 </Typography>
                 <Button variant="contained">
-                  {/* <Link className="link" href="/member/order">
+                  <Link className="link" href="/member/order">
                     <Typography component="span" color="white">
                       前往我的訂單
                     </Typography>
-                  </Link> */}
+                  </Link>
                 </Button>
               </Box>
               <Box component="section">
@@ -151,7 +154,7 @@ const BookingSuccess: NextPage = () => {
                   訂房人資訊
                 </Typography>
                 <Typography mb={1}>姓名</Typography>
-                <Typography mb={3}>{orderInfo.result.userInfo.name}</Typography>
+                <Typography mb={3}>{orderInfo.result.userInfo?.name}</Typography>
                 <Typography mb={1}>手機號碼</Typography>
                 <Typography mb={3}>{orderInfo.result.userInfo.phone}</Typography>
                 <Typography mb={1}>電子信箱</Typography>
@@ -269,7 +272,7 @@ const BookingSuccess: NextPage = () => {
         </Container>
         <HorizontalWave />
       </Box>
-    </>
+    </Suspense>
   );
 };
 

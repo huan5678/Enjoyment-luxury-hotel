@@ -19,8 +19,7 @@ import Loader from '@/components/common/Loader';
 import Menu from '@/app/c.menu';
 // others
 import { apiCheckUserIsLogin, getUser } from '@/assets/api';
-import { MemberResponseData, CheckLoginSchema, MemberData, ApiResponse, AuthResponse, CheckResponse } from '@/types';
-import { unknown } from 'zod';
+import { CheckResponse } from '@/types';
 
 function HideOnScroll({ children, window }: { children: React.ReactElement; window?: () => Window }) {
   const trigger = useScrollTrigger({

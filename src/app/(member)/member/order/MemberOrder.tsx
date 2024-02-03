@@ -54,6 +54,8 @@ const MemberOrder = ({ data }: { data: IOrder[] }) => {
     }
   }, []);
 
+  if (!orderData) return null;
+
   return (
     <Container sx={{ paddingBottom: isSmallDevice ? '2.5rem' : '7.5rem' }}>
       <Grid

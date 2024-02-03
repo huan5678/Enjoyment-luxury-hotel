@@ -1,6 +1,6 @@
-'use server';
+// 'use server';
 
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers';
 import { getCookie, setCookie } from 'cookies-next';
 import {
   ApiResponse,
@@ -21,7 +21,7 @@ import { get, post, put, del, handleApiResponse } from '@/utils';
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const token = () => {
-  const cookie = getCookie('token', { cookies });
+  const cookie = getCookie('token');
   return cookie || '';
 };
 
@@ -46,7 +46,7 @@ export async function getUser(): Promise<UserResponse> {
   }
 
   if (token) {
-    setCookie('token', token, { cookies });
+    setCookie('token', token);
   }
 
   return {
@@ -111,14 +111,14 @@ export async function userLogin(data: UserLoginData): Promise<UserResponse> {
     };
   }
 
-  if (token) setCookie('token', token, { cookies });
+  if (token) setCookie('token', token);
   return res;
 }
 
 export async function userRegister(data: IUser): Promise<UserResponse> {
   const res = await post<UserResponse>(`${baseUrl}/api/v1/user/signup`, data);
   const { token } = res;
-  if (token) setCookie('token', token, { cookies });
+  if (token) setCookie('token', token);
 
   return handleApiResponse(res);
 }
@@ -141,7 +141,7 @@ export async function verifyEmail(email: string): Promise<ApiResponse<{ isEmailE
 export async function apiCheckUserIsLogin(): Promise<CheckResponse> {
   const res = await get<CheckResponse>(`${baseUrl}/api/v1/user/check`, config);
   const { token } = res;
-  if (token) setCookie('token', token, { cookies });
+  if (token) setCookie('token', token);
   const result = {
     ...res,
     result: null,
