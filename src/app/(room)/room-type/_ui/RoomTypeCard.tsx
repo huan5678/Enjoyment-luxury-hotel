@@ -32,7 +32,7 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
             }}
             pagination={{ clickable: true }}
             onSlideChange={() => {}}
-            onSwiper={(swiper) => console.log(swiper)}>
+            onSwiper={() => {}}>
             <SwiperSlide>
               <Box
                 position={'relative'}

@@ -32,7 +32,7 @@ export default function Page({ data }: { data: RoomInfo[] }) {
         }}
         pagination={{ clickable: true }}
         onSlideChange={() => {}}
-        onSwiper={(swiper) => console.log(swiper)}>
+        onSwiper={() => {}}>
         {[1, 2].map((item) => (
           <SwiperSlide key={item}>
             <Box
