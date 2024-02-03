@@ -10,7 +10,7 @@ import HorizontalWave from '@/components/common/HorizontalWave';
 import Headline from '@/app/roomBooking/Headline';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { getOrderDetail } from '@/assets/api';
+import { getOrderDetail, getOrders } from '@/assets/api';
 import { useState, useEffect } from 'react';
 import { calcDays } from '../tool';
 import { OrderInfo } from '@/types';
@@ -92,8 +92,8 @@ const BookingSuccess: NextPage = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await getOrderDetail(orderId);
-      setOrderInfo(res);
+      const res = await getOrders(orderId);
+      setOrderInfo(res as unknown as OrderInfo);
     })();
   }, []);
 
@@ -139,11 +139,11 @@ const BookingSuccess: NextPage = () => {
                   立即查看您的訂單紀錄
                 </Typography>
                 <Button variant="contained">
-                  <Link className="link" href="/member/order">
+                  {/* <Link className="link" href="/member/order">
                     <Typography component="span" color="white">
                       前往我的訂單
                     </Typography>
-                  </Link>
+                  </Link> */}
                 </Button>
               </Box>
               <Box component="section">

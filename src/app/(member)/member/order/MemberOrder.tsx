@@ -15,6 +15,7 @@ import ModalController from './ModalController';
 import { calculateStayDays, formatDate, formatNTD } from '@/utils';
 import Headline from '@/components/common/Headline';
 import { IOrder } from '@/types';
+import moment from 'moment';
 
 const MAX_ORDERS_DISPLAY = 5;
 
@@ -34,22 +35,22 @@ const MemberOrder = ({ data }: { data: IOrder[] }) => {
   useEffect(() => {
     if (orderData.length > 0) {
       // 將字串日期轉換為日期物件
-      const parseDate = (dateStr: string) => new Date(dateStr);
+      const parseDate = (dateStr: string) => moment(dateStr);
 
       // 獲取現在的時間
       const now = new Date().getTime();
-
       // 篩選出未來的訂單
-      const futureOrders = orderData.filter((order) => order.checkInDate.getTime() > now);
+      const futureOrders = orderData.filter((order) => order.checkInDate && moment(order.checkInDate) > moment());
 
       // 尋找離現在時間最近的訂單
-      const closestOrder = futureOrders.reduce((prev, curr) => {
-        const prevDiff = prev.checkInDate.getTime() - now;
-        const currDiff = curr.checkInDate.getTime() - now;
-        return prevDiff < currDiff ? prev : curr;
-      }, futureOrders[0]);
+      // const closestOrder = futureOrders.reduce((prev, curr) => {
+      //   const prevDiff = moment(prev.checkInDate) - moment();
+      //   const currDiff = moment(curr.checkInDate) - moment();
+      //   return prevDiff < currDiff ? prev : curr;
+      // }, futureOrders[0]);
 
-      setTargetOrder(closestOrder);
+      setTargetOrder(futureOrders[0]);
+      // console.log('closestOrder', closestOrder);
     }
   }, []);
 
@@ -103,8 +104,8 @@ const MemberOrder = ({ data }: { data: IOrder[] }) => {
                     <Stack direction={'row'} spacing={'1rem'}>
                       <Typography variant={isSmallDevice ? 'subtitle1' : 'h6'}>
                         {`${targetOrder.roomId?.name}，${calculateStayDays(
-                          targetOrder.checkInDate.toLocaleString(),
-                          targetOrder.checkOutDate.toLocaleString(),
+                          targetOrder.checkInDate,
+                          targetOrder.checkOutDate,
                         )} 晚`}
                       </Typography>
                       <Divider orientation="vertical" variant="middle" flexItem />
@@ -116,12 +117,12 @@ const MemberOrder = ({ data }: { data: IOrder[] }) => {
                     <Stack direction={'column'} spacing={'0.5rem'}>
                       <Headline
                         variant={isSmallDevice ? 'subtitle1' : 'title'}
-                        title={`入住：${formatDate(targetOrder.checkInDate.toLocaleString(), '15:00 可入住')}`}
+                        title={`入住：${formatDate(targetOrder.checkInDate, '15:00 可入住')}`}
                       />
                       <Headline
                         variant={isSmallDevice ? 'subtitle1' : 'title'}
                         secondary
-                        title={`退房：${formatDate(targetOrder.checkOutDate.toLocaleString(), '12:00 前退房')}`}
+                        title={`退房：${formatDate(targetOrder.checkOutDate, '12:00 前退房')}`}
                       />
                     </Stack>
                     <Typography variant={'subtitle1'}>{`NT$ ${formatNTD(targetOrder.roomId?.price)}`}</Typography>

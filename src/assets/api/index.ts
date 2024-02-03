@@ -73,7 +73,7 @@ export async function updateUser(data: MemberUpdateData): Promise<ApiResponse<nu
 }
 
 export async function getOrders(id?: string | undefined): Promise<ApiResponse<IOrder[] | IOrder | null>> {
-  const res = await get<ApiResponse<IOrder[] | IOrder>>(`${baseUrl}/api/v1/orders${id ? id : ''}`, config);
+  const res = await get<ApiResponse<IOrder[] | IOrder>>(`${baseUrl}/api/v1/orders/${id ? id : ''}`, config);
   const { statusCode, status, message } = res;
   if (statusCode !== undefined && [400, 403, 404].includes(statusCode)) {
     return {

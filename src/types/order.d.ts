@@ -3,8 +3,8 @@ import { IUser } from './user';
 
 export interface IOrder {
   roomId: IRoom;
-  checkInDate: Date;
-  checkOutDate: Date;
+  checkInDate: string;
+  checkOutDate: string;
   peopleNum: number;
   orderUserId: string;
   userInfo: IUser;

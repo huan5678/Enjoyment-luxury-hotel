@@ -13,7 +13,7 @@ import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import BookerForm from './BookerForm';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { getRoomDetail } from '@/assets/api';
+import { apiGetRoomType } from '@/assets/api';
 import { useState, useEffect } from 'react';
 import { timeFormat, calcDays } from './tool';
 import { RoomTypeSchema } from '@/types';
@@ -124,8 +124,9 @@ const RoomBooking: NextPage = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await getRoomDetail(roomId);
-      setRoomDetail(res.result);
+      const res = await apiGetRoomType(roomId);
+      console.log(res);
+      setRoomDetail(res.result as unknown as RoomTypeSchema);
     })();
   }, []);
 
