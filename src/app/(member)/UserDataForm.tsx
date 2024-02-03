@@ -121,13 +121,13 @@ const UserDataForm = ({
   const handleOnsSubmit = () => {
     if (isRegister && setData) {
       const data = watch();
-      const resultPhone = data.phone[0] === '0' ? data.phone.slice(1) : data.phone || 0;
+      const resultPhone = data?.phone[0] === '0' ? data?.phone?.slice(1) : data.phone;
       const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone)}`;
       setData((prev) => {
         return {
           ...prev,
           ...data,
-          birthday: `${data.birthdayYear}-${data.birthdayMonth}-${data.birthdayDay}`,
+          birthday: `${data?.birthdayYear}-${data?.birthdayMonth}-${data?.birthdayDay}`,
           phone,
         };
       });
