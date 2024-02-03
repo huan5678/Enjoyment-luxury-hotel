@@ -10,13 +10,13 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 //
-import RoomTypeCard from '@/app/(room)/room-type/_ui/RoomTypeCard';
+import RoomTypeCard from '@/app/(room)/room-type/RoomTypeCard';
 //
-import { RoomInfo, RoomTypeCardProps } from './_domain';
+import { IRoom, RoomTypeCardProps } from '@/types';
 // image
 import BannerImg from '@/assets/images/banner.png';
 
-export default function Page({ data }: { data: RoomInfo[] }) {
+export default function Page({ data }: { data: IRoom[] }) {
   const theme = useTheme();
   const matches = useMediaQuery(() => theme.breakpoints.down('md'));
   return (

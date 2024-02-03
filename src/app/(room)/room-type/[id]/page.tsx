@@ -1,8 +1,11 @@
-import { getRoomDetail } from '@/assets/api';
+'use server';
+
+import { apiGetRoomType } from '@/assets/api';
+import { IRoom } from '@/types';
 import RoomInfoDetail from './RoomInfoDetail';
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const data = await getRoomDetail(params.id);
+  const res = await apiGetRoomType(params.id);
 
-  return <RoomInfoDetail data={data} />;
+  return <RoomInfoDetail data={res.result as IRoom} />;
 }
