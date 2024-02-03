@@ -1,5 +1,6 @@
 'use client';
-import * as React from 'react';
+
+import { Suspense } from 'react';
 import { Box, Button, Container, Grid, Stack, Typography, Link } from '@mui/material';
 import BedIcon from '@mui/icons-material/Bed';
 import PersonIcon from '@mui/icons-material/Person';
@@ -9,15 +10,17 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SquareCard from '@/components/room/SquareCard';
 import Headline from '@/app/roomBooking/Headline';
 import type { NextPage } from 'next';
-import { Suspense } from 'react';
+
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import BookerForm from './BookerForm';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { apiGetRoomType } from '@/assets/api';
+import { useSearchParams, useRouter, useParams } from 'next/navigation';
+import { apiGetRoomType, getOrders } from '@/assets/api';
+import { ApiResponse, IRoom, RoomTypeSchema } from '@/types';
+// import { getOrders } from '@/assets/api';
 import { useState, useEffect } from 'react';
 import { timeFormat, calcDays } from './tool';
-import { RoomTypeSchema } from '@/types';
+// import { RoomTypeSchema } from '@/types';
 
 let roomBookData = {
   roomId: '65a4e32683315f6587b0cb47',
@@ -25,23 +28,6 @@ let roomBookData = {
   checkOutDate: '2023/11/19',
   peopleNum: '2',
 };
-
-interface MemberData {
-  status: boolean;
-  result: {
-    address: {
-      zipcode: number;
-      detail: string;
-    };
-    _id: string;
-    name: string;
-    email: string;
-    phone: string;
-    birthday: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
 
 const initRoomData = {
   _id: '65a4e32683315f6587b0cb47',
@@ -101,34 +87,43 @@ const RoomBooking: NextPage = () => {
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = useParams();
   const [roomDetail, setRoomDetail] = useState<RoomTypeSchema>(initRoomData);
 
-  let roomId = 'no data';
-  let peopleNum = 'no data';
-  let checkInDate = 'no data';
-  let checkOutDate: string | null = 'no data';
-  if (searchParams.has('peopleNum')) {
-    roomId = searchParams.get('roomId')!;
-    peopleNum = searchParams.get('peopleNum')!;
-    checkInDate = searchParams.get('checkInDate')!;
-    checkOutDate = searchParams.get('checkOutDate')!;
-    roomBookData = {
-      roomId: roomId,
-      checkInDate: checkInDate,
-      checkOutDate: checkOutDate,
-      peopleNum: peopleNum,
-    };
-  }
+  const roomId = searchParams.roomId;
+  // let roomId = 'no data';
+  // let peopleNum = 'no data';
+  // let checkInDate = 'no data';
+  // let checkOutDate: string | null = 'no data';
+  // if (searchParams.has('peopleNum')) {
+  //   roomId = searchParams.get('roomId')!;
+  //   peopleNum = searchParams.get('peopleNum')!;
+  //   checkInDate = searchParams.get('checkInDate')!;
+  //   checkOutDate = searchParams.get('checkOutDate')!;
+  //   roomBookData = {
+  //     roomId: roomId,
+  //     checkInDate: checkInDate,
+  //     checkOutDate: checkOutDate,
+  //     peopleNum: peopleNum,
+  //   };
+  // }
 
-  const nightCount: number = calcDays(checkInDate, checkOutDate);
+  // const nightCount: number = calcDays(checkInDate, checkOutDate);
+
+  const getRoomType = async () => {
+    await apiGetRoomType(roomId as string).then((res: ApiResponse<IRoom[] | IRoom | null>) => {
+      if (res.status) {
+        setRoomDetail(res.result as IRoom);
+      }
+    });
+  };
 
   useEffect(() => {
-    (async () => {
-      const res = await apiGetRoomType(roomId);
-      console.log(res);
-      setRoomDetail(res.result as unknown as RoomTypeSchema);
-    })();
+    async function fetchData() {
+      await getRoomType();
+    }
+    fetchData();
+    // eslint-disable-next-line
   }, []);
 
   function handleEdit() {
@@ -136,11 +131,8 @@ const RoomBooking: NextPage = () => {
   }
 
   return (
-    <Suspense>
-      <Box
-        className="container"
-        bgcolor="
-#F7F2EE">
+    <>
+      <Box className="container" bgcolor="#F7F2EE">
         <Container>
           <Box sx={{ p: '120px 0 40px', display: 'flex' }}>
             <Stack direction={'row'} justifyContent={'center'} alignItems={'center'}>
@@ -171,11 +163,11 @@ const RoomBooking: NextPage = () => {
                   </Link>
                 </Stack>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ mb: '24px' }}>
-                  <Box>
+                  {/* <Box>
                     <Headline title="訂房日期" fontSizeStyle="normal" />
                     <Typography>{`入住：${timeFormat(checkInDate)}`}</Typography>
                     <Typography>{`退房：${timeFormat(checkOutDate)}`}</Typography>
-                  </Box>
+                  </Box> */}
                   <Link
                     component={'button'}
                     underline={'always'}
@@ -188,7 +180,7 @@ const RoomBooking: NextPage = () => {
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ mb: '24px' }}>
                   <Box>
                     <Headline title="房客人數" fontSizeStyle="normal" />
-                    <Typography>{`${peopleNum} 人`}</Typography>
+                    {/* <Typography>{`${peopleNum} 人`}</Typography> */}
                   </Box>
                   <Link
                     component={'button'}
@@ -310,10 +302,10 @@ const RoomBooking: NextPage = () => {
                   價格詳情
                 </Typography>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                  <Typography>
+                  {/* <Typography>
                     NT$ {roomDetail.price} x {nightCount} 晚
-                  </Typography>
-                  <Typography>NT$ {roomDetail.price * nightCount}</Typography>
+                  </Typography> */}
+                  {/* <Typography>NT$ {roomDetail.price * nightCount}</Typography> */}
                 </Stack>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} mb={'12px'}>
                   <Typography>住宿折扣</Typography>
@@ -322,7 +314,7 @@ const RoomBooking: NextPage = () => {
                 <Box borderBottom={'1px solid #ececec'} mb={'12px'}></Box>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} mb={'28px'}>
                   <Typography fontWeight={700}>總價</Typography>
-                  <Typography fontWeight={700}>NT$ {roomDetail.price * nightCount}</Typography>
+                  {/* <Typography fontWeight={700}>NT$ {roomDetail.price * nightCount}</Typography> */}
                 </Stack>
                 <Button variant="contained" type="submit" form="my-form">
                   確認訂房
@@ -332,7 +324,7 @@ const RoomBooking: NextPage = () => {
           </Stack>
         </Container>
       </Box>
-    </Suspense>
+    </>
   );
 };
 

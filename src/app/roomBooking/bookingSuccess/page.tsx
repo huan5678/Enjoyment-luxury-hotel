@@ -10,65 +10,67 @@ import { useWidth } from '@/hooks';
 import HorizontalWave from '@/components/common/HorizontalWave';
 import Headline from '@/app/roomBooking/Headline';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useParams } from 'next/navigation';
 import { getOrders } from '@/assets/api';
 import { useState, useEffect } from 'react';
 import { calcDays } from '../tool';
-import { OrderInfo } from '@/types';
+import { IOrder, ApiResponse } from '@/types';
 
-const initOrderInfo: OrderInfo = {
-  status: true,
-  result: {
-    userInfo: {
-      address: {
-        zipcode: 802,
-        detail: '文山路23號',
-      },
-      name: 'Joanne Chen',
-      phone: '0912345678',
-      email: 'example@gmail.com',
+const initOrderInfo: IOrder = {
+  userInfo: {
+    address: {
+      zipcode: 802,
+      detail: '文山路23號',
+      county: '文山區',
+      city: '高雄市',
     },
-    _id: '653e335a13831c2ac8c389bb',
-    roomId: {
-      name: '尊爵雙人房',
-      description: '享受高級的住宿體驗，尊爵雙人房提供給您舒適寬敞的空間和精緻的裝潢。',
-      imageUrl: 'https://fakeimg.pl/300/',
-      imageUrlList: ['https://fakeimg.pl/300/', 'https://fakeimg.pl/300/', 'https://fakeimg.pl/300/'],
-      areaInfo: '24坪',
-      bedInfo: '一張大床',
-      maxPeople: 4,
-      price: 10000,
-      status: 1,
-      layoutInfo: [
-        {
-          title: '市景',
-          isProvide: true,
-        },
-      ],
-      facilityInfo: [
-        {
-          title: '平面電視',
-          isProvide: true,
-        },
-      ],
-      amenityInfo: [
-        {
-          title: '衛生紙',
-          isProvide: true,
-        },
-      ],
-      _id: '653e4661336cdccc752127a0',
-      createdAt: '2023-10-29T11:47:45.641Z',
-      updatedAt: '2023-10-29T11:47:45.641Z',
-    },
-    checkInDate: '2023-06-17T16:00:00.000Z',
-    checkOutDate: '2023-06-18T16:00:00.000Z',
-    peopleNum: 2,
-    orderUserId: '6533f0ef4cdf5b7f762747b0',
-    status: 0,
-    createdAt: '2023-10-29T10:26:34.498Z',
-    updatedAt: '2023-10-29T10:26:34.498Z',
+    name: 'Joanne Chen',
+    phone: '0912345678',
+    email: 'example@gmail.com',
+    password: '',
+    birthday: new Date(),
+    verificationToken: '',
   },
+  _id: '653e335a13831c2ac8c389bb',
+  roomId: {
+    name: '尊爵雙人房',
+    description: '享受高級的住宿體驗，尊爵雙人房提供給您舒適寬敞的空間和精緻的裝潢。',
+    imageUrl: 'https://fakeimg.pl/300/',
+    imageUrlList: ['https://fakeimg.pl/300/', 'https://fakeimg.pl/300/', 'https://fakeimg.pl/300/'],
+    areaInfo: '24坪',
+    bedInfo: '一張大床',
+    maxPeople: 4,
+    price: 10000,
+    status: 1,
+    layoutInfo: [
+      {
+        title: '市景',
+        isProvide: true,
+      },
+    ],
+    facilityInfo: [
+      {
+        title: '平面電視',
+        isProvide: true,
+      },
+    ],
+    amenityInfo: [
+      {
+        title: '衛生紙',
+        isProvide: true,
+      },
+    ],
+    _id: '653e4661336cdccc752127a0',
+    createdAt: '2023-10-29T11:47:45.641Z',
+    updatedAt: '2023-10-29T11:47:45.641Z',
+  },
+  checkInDate: '2023-06-17T16:00:00.000Z',
+  checkOutDate: '2023-06-18T16:00:00.000Z',
+  peopleNum: 2,
+  orderUserId: '6533f0ef4cdf5b7f762747b0',
+  status: 1,
+  createdAt: '2023-10-29T10:26:34.498Z',
+  updatedAt: '2023-10-29T10:26:34.498Z',
 };
 
 function getDay(date: string): string {
@@ -85,20 +87,27 @@ function timeFormat(checkDate: string): string {
 }
 
 const BookingSuccess: NextPage = () => {
-  const [orderInfo, setOrderInfo] = useState<OrderInfo>(initOrderInfo);
+  const [orderInfo, setOrderInfo] = useState<IOrder>(initOrderInfo);
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
-  const searchParams = useSearchParams();
-  const orderId = searchParams.get('id')!;
+  const searchParams = useParams();
+  const orderId = searchParams.id;
+
+  const getAllOrders = async () => {
+    await getOrders(orderId as string).then((res: ApiResponse<IOrder[] | IOrder | null>) => {
+      if (res.status) {
+        setOrderInfo(res.result as IOrder);
+      }
+    });
+  };
 
   useEffect(() => {
-    (async () => {
-      const res = await getOrders(orderId);
-      setOrderInfo(res as unknown as OrderInfo);
-    })();
+    async function fetchData() {
+      await getAllOrders();
+    }
+    fetchData();
+    // eslint-disable-next-line
   }, []);
-
-  if (!orderInfo.result) return <></>;
 
   return (
     <Suspense>
@@ -128,7 +137,7 @@ const BookingSuccess: NextPage = () => {
                     <Check sx={{ fontSize: 40, color: '#ffffff' }} />
                   </Stack>
                   <Typography component="h2" fontSize={{ sm: '32px', md: '40px' }} fontWeight={700}>
-                    恭喜，{orderInfo.result.userInfo?.name}！
+                    恭喜，{orderInfo.userInfo.name}！
                     <br />
                     您已預訂成功
                   </Typography>
@@ -154,11 +163,11 @@ const BookingSuccess: NextPage = () => {
                   訂房人資訊
                 </Typography>
                 <Typography mb={1}>姓名</Typography>
-                <Typography mb={3}>{orderInfo.result.userInfo?.name}</Typography>
+                <Typography mb={3}>{orderInfo.userInfo.name}</Typography>
                 <Typography mb={1}>手機號碼</Typography>
-                <Typography mb={3}>{orderInfo.result.userInfo.phone}</Typography>
+                <Typography mb={3}>{orderInfo.userInfo.phone}</Typography>
                 <Typography mb={1}>電子信箱</Typography>
-                <Typography mb={7}>{orderInfo.result.userInfo.email}</Typography>
+                <Typography mb={7}>{orderInfo.userInfo.email}</Typography>
               </Box>
             </Box>
             <Box
@@ -182,17 +191,17 @@ const BookingSuccess: NextPage = () => {
                   即將來的行程
                 </Typography>
                 <img
-                  src={orderInfo.result.roomId.imageUrl}
+                  src={orderInfo.roomId.imageUrl}
                   alt="room image"
                   style={{ borderRadius: '8px', marginBottom: '28px' }}
                 />
                 <Box mb={{ sm: 3, md: 5 }} pb={{ sm: 3, md: 5 }} borderBottom={'1px solid #ECECEC'}>
                   <Stack direction={'row'} mb={3}>
                     <Typography fontSize={{ sm: '16px', md: '20px' }} fontWeight={700}>
-                      {orderInfo.result.roomId.name}，
+                      {orderInfo.roomId.name}，
                       {(() => {
-                        const checkInDate = orderInfo.result.checkInDate.split('T')[0];
-                        const checkOutDate = orderInfo.result.checkOutDate.split('T')[0];
+                        const checkInDate = orderInfo.checkInDate.split('T')[0];
+                        const checkOutDate = orderInfo.checkOutDate.split('T')[0];
                         const nightCount = calcDays(checkInDate, checkOutDate);
                         return nightCount;
                       })()}
@@ -202,16 +211,16 @@ const BookingSuccess: NextPage = () => {
                       |
                     </Typography>
                     <Typography fontSize={{ sm: '16px', md: '20px' }} fontWeight={700}>
-                      &nbsp;&nbsp;住宿人數：{orderInfo.result.peopleNum} 位
+                      &nbsp;&nbsp;住宿人數：{orderInfo.peopleNum} 位
                     </Typography>
                   </Stack>
                   <Box mb={3}>
                     <Headline
-                      title={`入住：${timeFormat(orderInfo.result.checkInDate)}，15:00 可入住`}
+                      title={`入住：${timeFormat(orderInfo.checkInDate)}，15:00 可入住`}
                       fontSizeStyle="normal"
                     />
                     <Headline
-                      title={`退房：${timeFormat(orderInfo.result.checkOutDate)}，12:00 前退房`}
+                      title={`退房：${timeFormat(orderInfo.checkOutDate)}，12:00 前退房`}
                       fontSizeStyle="normal"
                       isGray={true}
                     />
@@ -219,10 +228,10 @@ const BookingSuccess: NextPage = () => {
                   <Typography fontWeight={700}>
                     NT${' '}
                     {(() => {
-                      const checkInDate = orderInfo.result.checkInDate.split('T')[0];
-                      const checkOutDate = orderInfo.result.checkOutDate.split('T')[0];
+                      const checkInDate = orderInfo.checkInDate.split('T')[0];
+                      const checkOutDate = orderInfo.checkOutDate.split('T')[0];
                       const nightCount = calcDays(checkInDate, checkOutDate);
-                      return orderInfo.result.roomId.price * nightCount;
+                      return orderInfo.roomId.price * nightCount;
                     })()}
                   </Typography>
                 </Box>
@@ -236,7 +245,7 @@ const BookingSuccess: NextPage = () => {
                     borderRadius={1}
                     useFlexGap
                     flexWrap="wrap">
-                    {orderInfo.result.roomId.facilityInfo.map((item, i) => {
+                    {orderInfo.roomId.facilityInfo.map((item, i) => {
                       return (
                         <Box key={i} sx={{ display: 'flex' }} mb={'10px'} width={'50%'}>
                           <Check color="primary" sx={{ fontSize: 24 }} />
@@ -256,7 +265,7 @@ const BookingSuccess: NextPage = () => {
                     borderRadius={1}
                     useFlexGap
                     flexWrap="wrap">
-                    {orderInfo.result.roomId.amenityInfo.map((item, i) => {
+                    {orderInfo.roomId.amenityInfo.map((item, i) => {
                       return (
                         <Box key={i} sx={{ display: 'flex' }} mb={'10px'} width={'50%'}>
                           <Check color="primary" sx={{ fontSize: 24 }} />

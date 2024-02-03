@@ -17,6 +17,8 @@ export interface IRoom {
   facilityInfo: IItem[];
   amenityInfo: IItem[];
   status: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 type RoomInfoSchema = {
