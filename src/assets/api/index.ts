@@ -160,12 +160,9 @@ export async function apiGetRoomType(id?: string | undefined): Promise<ApiRespon
   return handleApiResponse(res);
 }
 
-export async function apiGetCulinary(id?: string | undefined): Promise<ApiResponse<ICulinary[] | ICulinary | null>> {
-  const res = await get<ApiResponse<ICulinary[] | ICulinary | null>>(`${baseUrl}/api/v1/home/culinary/${id ? id : ''}`);
-
-  return handleApiResponse(res);
-}
-
+/**
+ * 與 apiGetRoomType 重複待刪除
+ */
 export async function getRoomDetail(roomId: string) {
   const res = await fetch(`${baseUrl}/api/v1/rooms/${roomId}`, {
     method: 'GET',
@@ -173,6 +170,12 @@ export async function getRoomDetail(roomId: string) {
   });
 
   return res;
+}
+
+export async function apiGetCulinary(id?: string | undefined): Promise<ApiResponse<ICulinary[] | ICulinary | null>> {
+  const res = await get<ApiResponse<ICulinary[] | ICulinary | null>>(`${baseUrl}/api/v1/home/culinary/${id ? id : ''}`);
+
+  return handleApiResponse(res);
 }
 
 export async function postOrder(data: OrderPostData): Promise<ApiResponse<Order | null>> {
