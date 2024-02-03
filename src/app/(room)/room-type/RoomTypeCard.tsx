@@ -43,7 +43,14 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
                   overflow: 'hidden',
                   img: { width: '100%', height: '100%', objectFit: 'cover' },
                 }}>
-                <Image width={500} height={500} src={props.imageUrl} alt={`${props.name}環境`} priority={true} />
+                <Image
+                  width={500}
+                  height={500}
+                  src={props.imageUrl}
+                  alt={`${props.name}環境`}
+                  objectFit="cover"
+                  priority={true}
+                />
               </Box>
             </SwiperSlide>
             {props.imageUrlList.map((item, idx) => (
@@ -57,7 +64,14 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
                     overflow: 'hidden',
                     img: { width: '100%', height: '100%', objectFit: 'cover' },
                   }}>
-                  <Image width={500} height={500} src={item} alt={`${props.name}環境-${idx + 1}`} priority={true} />
+                  <Image
+                    width={500}
+                    height={500}
+                    src={item}
+                    alt={`${props.name}環境-${idx + 1}`}
+                    objectFit="cover"
+                    priority={true}
+                  />
                 </Box>
               </SwiperSlide>
             ))}

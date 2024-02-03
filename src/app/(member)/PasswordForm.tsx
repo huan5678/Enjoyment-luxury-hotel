@@ -28,6 +28,7 @@ export const ChangePasswordForm = ({
   memberData: MemberData;
   setOpenForm: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+
   const {
     register,
     handleSubmit,
@@ -42,6 +43,9 @@ export const ChangePasswordForm = ({
       newPassword: data.newPassword,
       oldPassword: data.oldPassword,
     });
+    if (result) {
+      setOpenForm(false);
+    }
   };
 
   return (
