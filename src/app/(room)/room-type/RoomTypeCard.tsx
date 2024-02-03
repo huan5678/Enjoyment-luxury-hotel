@@ -9,7 +9,7 @@ import 'swiper/css';
 //
 import RoomBaseInfoBlock from '@/components/room/RoomBaseInfoBlock';
 //
-import { RoomTypeCardProps } from '../_domain';
+import { RoomTypeCardProps } from '@/types';
 
 export default function RoomTypeCard(props: RoomTypeCardProps) {
   return (
