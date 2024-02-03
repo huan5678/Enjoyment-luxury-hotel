@@ -9,7 +9,7 @@ import 'swiper/css';
 //
 import RoomBaseInfoBlock from '@/components/room/RoomBaseInfoBlock';
 //
-import { RoomTypeCardProps } from '../_domain';
+import { RoomTypeCardProps } from '@/types';
 
 export default function RoomTypeCard(props: RoomTypeCardProps) {
   return (
@@ -32,7 +32,7 @@ export default function RoomTypeCard(props: RoomTypeCardProps) {
             }}
             pagination={{ clickable: true }}
             onSlideChange={() => {}}
-            onSwiper={(swiper) => console.log(swiper)}>
+            onSwiper={() => {}}>
             <SwiperSlide>
               <Box
                 position={'relative'}

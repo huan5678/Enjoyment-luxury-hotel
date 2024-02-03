@@ -28,7 +28,7 @@ export default function HeroSecition() {
       }}
       pagination={{ clickable: true }}
       onSlideChange={() => {}}
-      onSwiper={(swiper) => console.log(swiper)}>
+      onSwiper={() => {}}>
       {[1, 2].map((item) => {
         return (
           <SwiperSlide key={item}>

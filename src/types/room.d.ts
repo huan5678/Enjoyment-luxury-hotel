@@ -4,6 +4,7 @@ export type IItem = {
 };
 
 export interface IRoom {
+  _id: string;
   name: string;
   description: string;
   imageUrl: string;
@@ -12,11 +13,10 @@ export interface IRoom {
   bedInfo: string;
   maxPeople: number;
   price: number;
-  status: number;
   layoutInfo: IItem[];
   facilityInfo: IItem[];
   amenityInfo: IItem[];
-  _id?: string;
+  status: number;
 }
 
 type RoomInfoSchema = {
@@ -46,3 +46,8 @@ type RoomTypeResponseData = {
   status: boolean;
   result: RoomTypeSchema[];
 };
+
+export type RoomTypeCardProps = Pick<
+IRoom,
+  '_id' | 'name' | 'description' | 'price' | 'imageUrl' | 'imageUrlList' | 'areaInfo' | 'bedInfo' | 'maxPeople'
+>;

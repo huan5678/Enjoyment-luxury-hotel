@@ -41,14 +41,10 @@ import RoomFacilityBlock from '@/components/room/RoomFacilityBlock';
 import RoomBaseInfoBlock from '@/components/room/RoomBaseInfoBlock';
 import { roomRules } from '@/assets/roomRules';
 //
-import { RoomInfo } from '../_domain/index';
+import { IRoom } from '@/types';
 
-/**
- * To do
- * props: RoomInfo
- */
-export default function Page({ data }: any) {
-  const { result } = data;
+export default function Page({ data }: { data: IRoom }) {
+  const result = data;
   // console.log('result', result);
 
   const theme = useTheme();
@@ -157,7 +153,7 @@ export default function Page({ data }: any) {
           }}
           pagination={{ clickable: true }}
           onSlideChange={() => {}}
-          onSwiper={(swiper) => console.log(swiper)}>
+          onSwiper={() => {}}>
           <SwiperSlide>
             <Box
               position={'relative'}
