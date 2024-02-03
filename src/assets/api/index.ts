@@ -160,18 +160,6 @@ export async function apiGetRoomType(id?: string | undefined): Promise<ApiRespon
   return handleApiResponse(res);
 }
 
-/**
- * 與 apiGetRoomType 重複待刪除
- */
-export async function getRoomDetail(roomId: string) {
-  const res = await fetch(`${baseUrl}/api/v1/rooms/${roomId}`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  return res;
-}
-
 export async function apiGetCulinary(id?: string | undefined): Promise<ApiResponse<ICulinary[] | ICulinary | null>> {
   const res = await get<ApiResponse<ICulinary[] | ICulinary | null>>(`${baseUrl}/api/v1/home/culinary/${id ? id : ''}`);
 
@@ -182,20 +170,4 @@ export async function postOrder(data: OrderPostData): Promise<ApiResponse<Order 
   const res = await post<ApiResponse<Order | null>>(`${baseUrl}/api/v1/orders`, data, config);
 
   return handleApiResponse(res);
-}
-
-export async function getOrderDetail(orderId: string) {
-  const res = await fetch(`${baseUrl}/api/v1/orders/${orderId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token(),
-    },
-  });
-
-  if (!res.ok) {
-    console.error('Failed to fetch data');
-  }
-
-  return res;
 }
