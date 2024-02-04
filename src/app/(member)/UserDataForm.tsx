@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { object, z } from 'zod';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
 import { citys, zipcodes } from '@/assets/cityData';
@@ -118,27 +118,27 @@ const UserDataForm = ({
     }
   }, [city]);
 
-  const handleOnsSubmit = () => {
+  const handleOnSubmit = () => {
     if (isRegister && setData) {
       const data = watch();
-      const resultPhone = data?.phone[0] === '0' ? data?.phone?.slice(1) : data.phone;
-      const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone)}`;
+      const resultPhone = data.phone;
+      const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone as unknown as string)}`;
       setData((prev) => {
         return {
           ...prev,
           ...data,
           birthday: `${data?.birthdayYear}-${data?.birthdayMonth}-${data?.birthdayDay}`,
           phone,
-        };
+        } as MemberEditData;
       });
-      onSubmit(data);
+      onSubmit(data as MemberEditData);
     } else {
-      onSubmit(watch());
+      onSubmit(watch() as MemberEditData);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(handleOnsSubmit)}>
+    <form onSubmit={handleSubmit(handleOnSubmit)}>
       <Stack direction={'column'} spacing={isRegister ? '1rem' : '1.5rem'}>
         <Controller
           name="name"

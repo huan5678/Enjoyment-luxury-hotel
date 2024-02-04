@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install",
-    "turbo": "next dev --turbo"
+    "turbo": "next dev --turbo",
+    "export": "next export"
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
