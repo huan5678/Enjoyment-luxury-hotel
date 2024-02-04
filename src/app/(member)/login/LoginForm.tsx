@@ -68,7 +68,7 @@ const LoginForm = () => {
   });
 
   const email = watch('email');
-  const wait = async (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+  const wait = async (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
   const onSubmit = async (data: LoginDataSchema) => {
     const { email, password } = data;
     setIsLoading(true);
