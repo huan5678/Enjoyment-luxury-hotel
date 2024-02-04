@@ -44,7 +44,7 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer, userName }: menuDo
     setOpenMenu(false);
     setIsLogin(false);
     setCookie('token', '');
-    console.log('logout');
+    // console.log('logout');
   };
 
   return (

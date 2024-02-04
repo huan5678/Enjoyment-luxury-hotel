@@ -33,8 +33,13 @@ const config = {
 };
 
 export async function getUser(): Promise<UserResponse> {
-  const res = await get<UserResponse>(`${baseUrl}/api/v1/user`, config);
-  const { statusCode, status, message, result, token } = res;
+  const res = await get<UserResponse>(`${baseUrl}/api/v1/user`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token(),
+    },
+  });
+  const { statusCode, status, message, result } = res;
 
   if (statusCode === 403) {
     return {
@@ -45,8 +50,8 @@ export async function getUser(): Promise<UserResponse> {
     };
   }
 
-  if (token) {
-    setCookie('token', token);
+  if (res.token) {
+    setCookie('token', res.token);
   }
 
   return {
@@ -54,7 +59,7 @@ export async function getUser(): Promise<UserResponse> {
     status,
     message,
     result, // 这里的 result 是 MemberData 类型
-    token,
+    token: res.token,
   };
 }
 
@@ -139,9 +144,14 @@ export async function verifyEmail(email: string): Promise<ApiResponse<{ isEmailE
 }
 
 export async function apiCheckUserIsLogin(): Promise<CheckResponse> {
-  const res = await get<CheckResponse>(`${baseUrl}/api/v1/user/check`, config);
-  const { token } = res;
-  if (token) setCookie('token', token);
+  const res = await get<CheckResponse>(`${baseUrl}/api/v1/user/check`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token(),
+    },
+  });
+
+  if (res.token) setCookie('token', res.token);
   const result = {
     ...res,
     result: null,

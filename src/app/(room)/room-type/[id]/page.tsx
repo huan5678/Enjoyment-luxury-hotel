@@ -48,15 +48,45 @@ const roomBase: RoomTypeSchema = {
   name: '',
   description: '',
   price: 0,
-  imageUrl: '',
-  imageUrlList: [],
+  imageUrl:
+    'https://raw.githubusercontent.com/hexschool/2022-web-layout-training/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/room2-2.png',
+  imageUrlList: [
+    'https://raw.githubusercontent.com/hexschool/2022-web-layout-training/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/room2-2.png',
+  ],
   areaInfo: '',
   bedInfo: '',
   maxPeople: 0,
   status: 0,
-  layoutInfo: [],
-  facilityInfo: [],
-  amenityInfo: [],
+  layoutInfo: [
+    {
+      title: '市景',
+      isProvide: false,
+    },
+    {
+      title: '獨立衛浴',
+      isProvide: true,
+    },
+  ],
+  facilityInfo: [
+    {
+      title: '市景',
+      isProvide: false,
+    },
+    {
+      title: '獨立衛浴',
+      isProvide: true,
+    },
+  ],
+  amenityInfo: [
+    {
+      title: '市景',
+      isProvide: false,
+    },
+    {
+      title: '獨立衛浴',
+      isProvide: true,
+    },
+  ],
 };
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -74,10 +104,7 @@ export default function Page({ params }: { params: { id: string } }) {
   };
 
   useEffect(() => {
-    async function fetchData() {
-      await getRoomType();
-    }
-    fetchData();
+    getRoomType();
     // eslint-disable-next-line
   }, []);
 

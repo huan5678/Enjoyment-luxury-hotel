@@ -68,6 +68,7 @@ const LoginForm = () => {
   });
 
   const email = watch('email');
+  const wait = async (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
   const onSubmit = async (data: LoginDataSchema) => {
     const { email, password } = data;
     setIsLoading(true);
@@ -77,10 +78,10 @@ const LoginForm = () => {
       password,
     });
 
-    console.log(res);
     if (res.status === true) {
       setIsLoading(false);
       setIsLogin(true);
+      wait(2000);
       router.push('/');
     }
     setIsLoading(false);

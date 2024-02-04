@@ -17,7 +17,7 @@ export default function News() {
 
   const getNews = async () => {
     await apiGetNews().then((res: ApiResponse<INews[] | INews | null>) => {
-      if (res.status === true && Array.isArray(res.status)) setData(res.result as NewsSchema[]);
+      if (res.status === true && Array.isArray(res.result)) setData(res.result as NewsSchema[]);
     });
   };
 

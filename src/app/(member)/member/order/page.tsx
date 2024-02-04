@@ -56,7 +56,7 @@ const Page = () => {
 
       setTargetOrder(closestOrder);
     }
-  }, [data]);
+  }, []);
 
   if (!data) return null;
 

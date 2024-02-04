@@ -127,13 +127,12 @@ const RoomBooking: NextPage = () => {
   useEffect(() => {
     (async () => {
       const res = await apiGetRoomType(roomId);
-      console.log(res);
       setRoomDetail(res.result as unknown as RoomTypeSchema);
     })();
   }, []);
 
-  function handleEdit() {
-    router.back();
+  function handleEdit(url: string) {
+    router.push(url);
   }
 
   return (
@@ -161,7 +160,12 @@ const RoomBooking: NextPage = () => {
                   <Headline title="選擇房型" fontSizeStyle="normal" />
                   <Typography>{roomDetail.name}</Typography>
                 </Box>
-                <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'} onClick={handleEdit}>
+                <Link
+                  component={'button'}
+                  underline={'always'}
+                  fontWeight={700}
+                  color={'#000000'}
+                  onClick={() => handleEdit('/room-type')}>
                   {'編輯'}
                 </Link>
               </Stack>
@@ -171,7 +175,12 @@ const RoomBooking: NextPage = () => {
                   <Typography>{`入住：${timeFormat(checkInDate)}`}</Typography>
                   <Typography>{`退房：${timeFormat(checkOutDate)}`}</Typography>
                 </Box>
-                <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'} onClick={handleEdit}>
+                <Link
+                  component={'button'}
+                  underline={'always'}
+                  fontWeight={700}
+                  color={'#000000'}
+                  onClick={() => router.back()}>
                   {'編輯'}
                 </Link>
               </Stack>
@@ -180,7 +189,12 @@ const RoomBooking: NextPage = () => {
                   <Headline title="房客人數" fontSizeStyle="normal" />
                   <Typography>{`${peopleNum} 人`}</Typography>
                 </Box>
-                <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'} onClick={handleEdit}>
+                <Link
+                  component={'button'}
+                  underline={'always'}
+                  fontWeight={700}
+                  color={'#000000'}
+                  onClick={() => router.back()}>
                   {'編輯'}
                 </Link>
               </Stack>
@@ -290,8 +304,7 @@ const RoomBooking: NextPage = () => {
                 flexDirection: 'column',
                 gap: '12px',
               }}>
-              <Image src={roomDetail.imageUrl} alt="room image" width={478} height={318} />
-              {/* <img src={roomDetail.imageUrl} alt="room image" style={{ borderRadius: '8px', marginBottom: '28px' }} /> */}
+              <img src={roomDetail.imageUrl} alt="room image" style={{ borderRadius: '8px', marginBottom: '28px' }} />
               <Typography variant={'h4'} component="h3" mb={'12px'}>
                 價格詳情
               </Typography>
