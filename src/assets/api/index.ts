@@ -25,12 +25,12 @@ const token = () => {
   return cookie || '';
 };
 
-const config = {
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: token(),
-  },
-};
+// const config = {
+//   headers: {
+//     'Content-Type': 'application/json',
+//     Authorization: token(),
+//   },
+// };
 
 export async function getUser(): Promise<UserResponse> {
   const res = await get<UserResponse>(`${baseUrl}/api/v1/user`, {
@@ -64,7 +64,12 @@ export async function getUser(): Promise<UserResponse> {
 }
 
 export async function updateUser(data: MemberUpdateData): Promise<ApiResponse<null>> {
-  const res = await put<ApiResponse<null>>(`${baseUrl}/api/v1/user`, data, config);
+  const res = await put<ApiResponse<null>>(`${baseUrl}/api/v1/user`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token(),
+    },
+  });
   const { statusCode, status, message } = res;
   if (statusCode !== undefined && [400, 403, 404].includes(statusCode)) {
     return {
@@ -78,7 +83,12 @@ export async function updateUser(data: MemberUpdateData): Promise<ApiResponse<nu
 }
 
 export async function getOrders(id?: string | undefined): Promise<ApiResponse<IOrder[] | IOrder | null>> {
-  const res = await get<ApiResponse<IOrder[] | IOrder>>(`${baseUrl}/api/v1/orders/${id ? id : ''}`, config);
+  const res = await get<ApiResponse<IOrder[] | IOrder>>(`${baseUrl}/api/v1/orders/${id ? id : ''}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token(),
+    },
+  });
   const { statusCode, status, message } = res;
   if (statusCode !== undefined && [400, 403, 404].includes(statusCode)) {
     return {
@@ -92,7 +102,12 @@ export async function getOrders(id?: string | undefined): Promise<ApiResponse<IO
 }
 
 export async function deleteOrder(id?: string | undefined): Promise<ApiResponse<IOrder | null>> {
-  const res = await del<ApiResponse<IOrder | null>>(`${baseUrl}/api/v1/orders/${id}`, config);
+  const res = await del<ApiResponse<IOrder | null>>(`${baseUrl}/api/v1/orders/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token(),
+    },
+  });
   const { statusCode, status, message } = res;
   if (statusCode !== undefined && [400, 403, 404].includes(statusCode)) {
     return {
@@ -189,7 +204,12 @@ export async function apiGetCulinary(id?: string | undefined): Promise<ApiRespon
 }
 
 export async function postOrder(data: OrderPostData): Promise<ApiResponse<Order | null>> {
-  const res = await post<ApiResponse<Order | null>>(`${baseUrl}/api/v1/orders`, data, config);
+  const res = await post<ApiResponse<Order | null>>(`${baseUrl}/api/v1/orders`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token(),
+    },
+  });
 
   return handleApiResponse(res);
 }
