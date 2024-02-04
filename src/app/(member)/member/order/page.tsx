@@ -32,12 +32,15 @@ const Page = () => {
     setDisplayedOrders((prev) => prev + MAX_ORDERS_DISPLAY);
   };
 
+  const handleGetOrder = async () => {
+    await getOrders().then((res) => setData(res.result as unknown as IOrder[]));
+  };
+
   useEffect(() => {
-    async function fetchData() {
-      const res = await getOrders();
-      setData(res.result as unknown as IOrder[]);
-    }
-    fetchData();
+    handleGetOrder();
+  }, []);
+
+  useEffect(() => {
     if (data.length > 0) {
       // 將字串日期轉換為日期物件
       const parseDate = (dateStr: string) => moment(dateStr);
@@ -47,18 +50,14 @@ const Page = () => {
       // 篩選出未來的訂單
       const futureOrders = data.filter((order) => order.checkInDate && moment(order.checkInDate) > moment());
 
-      // 尋找離現在時間最近的訂單
       const closestOrder = futureOrders.reduce((prev, curr) => {
         const prevDiff = parseDate(prev.checkInDate).valueOf() - now;
         const currDiff = parseDate(curr.checkInDate).valueOf() - now;
         return prevDiff < currDiff ? prev : curr;
       }, futureOrders[0]);
-
       setTargetOrder(closestOrder);
     }
-  }, []);
-
-  if (!data) return null;
+  }, [data]);
 
   return (
     <Suspense>
