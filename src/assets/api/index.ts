@@ -5,12 +5,16 @@ import { getCookie, setCookie } from 'cookies-next';
 import {
   ApiResponse,
   CheckResponse,
+  BaseResponse,
   ICulinary,
   INews,
   IOrder,
   IRoom,
   IUser,
-  MemberUpdateData,
+  VerifyEmailData,
+  ForgotPwdData,
+  MemberUpdateDetailData,
+  MemberUpdatePwdData,
   Order,
   OrderPostData,
   UserLoginData,
@@ -58,8 +62,22 @@ export async function getUser(): Promise<UserResponse> {
   };
 }
 
-export async function updateUser(data: MemberUpdateData): Promise<ApiResponse<null>> {
-  const res = await put<ApiResponse<null>>(`${baseUrl}/api/v1/user`, data, config());
+export async function updateUser(data: MemberUpdateDetailData): Promise<ApiResponse<null>> {
+  const res = await put<ApiResponse<null>>(`${baseUrl}/api/v1/user/`, data, config());
+  const { statusCode, status, message } = res;
+  if (statusCode !== undefined && [400, 403, 404].includes(statusCode)) {
+    return {
+      status,
+      message,
+      result: null,
+    };
+  }
+
+  return res;
+}
+
+export async function updateUserPwd(data: MemberUpdatePwdData): Promise<ApiResponse<null>> {
+  const res = await put<ApiResponse<null>>(`${baseUrl}/api/v1/user/`, data, config());
   const { statusCode, status, message } = res;
   if (statusCode !== undefined && [400, 403, 404].includes(statusCode)) {
     return {
@@ -119,6 +137,18 @@ export async function userRegister(data: IUser): Promise<UserResponse> {
   const res = await post<UserResponse>(`${baseUrl}/api/v1/user/signup`, data);
   const { token } = res;
   if (token) setCookie('token', token);
+
+  return handleApiResponse(res);
+}
+
+export async function apiPostGenerateEmailCode(data: VerifyEmailData): Promise<ApiResponse<null>> {
+  const res = await post<ApiResponse<null>>(`${baseUrl}/api/v1/verify/generateEmailCode`, data);
+
+  return handleApiResponse(res);
+}
+
+export async function apiPostForgot(data: ForgotPwdData): Promise<ApiResponse<null>> {
+  const res = await post<ApiResponse<null>>(`${baseUrl}/api/v1/user/forgot`, data);
 
   return handleApiResponse(res);
 }

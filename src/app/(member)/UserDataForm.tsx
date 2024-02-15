@@ -12,14 +12,12 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { object, z } from 'zod';
+import { z } from 'zod';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
 import { citys, zipcodes } from '@/assets/cityData';
-import countryPhoneCodes from '@/assets/countryPhoneCodes.json';
-import countryFlagEmoji from '@/assets/countryFlagEmoji.json';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { formatPhoneNumber, schemaValidate } from '@/utils';
+import { schemaValidate, getAddressDetailByCode } from '@/utils';
 import { MemberData, MemberEditData } from '@/types';
 
 const Checkbox = styled(BaseCheckbox)(({ theme }) => ({
@@ -59,7 +57,6 @@ const UserDataForm = ({
 
   const memberDataSchema = z.object({
     name: schemaValidate('name'),
-    countryPhoneCode: schemaValidate('countryPhoneCode'),
     phone: schemaValidate('phone'),
     birthdayYear: schemaValidate('birthdayYear'),
     birthdayMonth: schemaValidate('birthdayMonth'),
@@ -119,21 +116,20 @@ const UserDataForm = ({
   }, [city]);
 
   const handleOnSubmit = () => {
+    const data = watch();
+    console.log('data', data);
     if (isRegister && setData) {
-      const data = watch();
-      const resultPhone = data.phone;
-      const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone as unknown as string)}`;
       setData((prev) => {
         return {
           ...prev,
           ...data,
           birthday: `${data?.birthdayYear}-${data?.birthdayMonth}-${data?.birthdayDay}`,
-          phone,
+          phone: data.phone,
         } as MemberEditData;
       });
       onSubmit(data as MemberEditData);
     } else {
-      onSubmit(watch() as MemberEditData);
+      onSubmit(data as MemberEditData);
     }
   };
 
@@ -156,39 +152,6 @@ const UserDataForm = ({
           )}
         />
         <Stack direction={'row'} spacing={'1rem'}>
-          <Controller
-            name="countryPhoneCode"
-            control={control}
-            render={({ field }) => (
-              <Select
-                {...field}
-                label="區域號碼"
-                labelColor={isRegister ? 'white' : 'black'}
-                options={countryPhoneCodes.map((item) => ({
-                  key: item.iso,
-                  value: item.code,
-                  content: (
-                    <Stack direction={'row'} alignItems={'center'} spacing={2}>
-                      {countryFlagEmoji.find((flag) => flag.code === item.iso)?.image && (
-                        <Image
-                          src={countryFlagEmoji.find((flag) => flag.code === item.iso)?.image as unknown as string}
-                          width={24}
-                          height={24}
-                          alt={item.iso}
-                        />
-                      )}
-                      <Typography variant={'body2'} component={'span'}>
-                        (+{item.code})
-                      </Typography>
-                    </Stack>
-                  ),
-                }))}
-                error={Boolean(errors.countryPhoneCode)}
-                placeholder="區碼"
-                sx={{ width: '100%' }}
-              />
-            )}
-          />
           <Controller
             name="phone"
             control={control}
@@ -217,7 +180,7 @@ const UserDataForm = ({
                 labelColor={isRegister ? 'white' : 'black'}
                 options={years.map((year) => ({ value: year, label: String(year) }))}
                 error={Boolean(errors.birthdayYear)}
-                placeholder="您的出生年"
+                placeholder={field.value ? `${field.value}` : '您的出生年'}
               />
             )}
           />
@@ -230,7 +193,7 @@ const UserDataForm = ({
                 label=""
                 options={months.map((month) => ({ value: month, label: String(month) }))}
                 error={Boolean(errors.birthdayYear)}
-                placeholder="您的出生月"
+                placeholder={field.value ? `${field.value}` : '您的出生月'}
               />
             )}
           />
@@ -243,7 +206,7 @@ const UserDataForm = ({
                 label=""
                 options={days.map((day) => ({ value: day, label: String(day) }))}
                 error={Boolean(errors.birthdayYear)}
-                placeholder="您的出生日"
+                placeholder={field.value ? `${field.value}` : '您的出生日'}
               />
             )}
           />
@@ -259,7 +222,7 @@ const UserDataForm = ({
                 labelColor={isRegister ? 'white' : 'black'}
                 options={citys.map((city) => ({ value: city, label: city }))}
                 error={Boolean(errors.city)}
-                placeholder="您所在的城市"
+                placeholder={field.value ? `${field.value}` : '您所在的城市'}
               />
             )}
           />
@@ -277,7 +240,7 @@ const UserDataForm = ({
                 }))}
                 error={Boolean(errors.address?.message)}
                 disabled={counties.length <= 1}
-                placeholder="您所在的區域"
+                placeholder={field.value ? `${getAddressDetailByCode(field.value)?.county}` : '您所在的區域'}
               />
             )}
           />

@@ -1,17 +1,17 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Box, Grid, Link, Stack, Typography, Step, StepConnector, StepLabel, Stepper } from '@mui/material';
 import { useWidth } from '@/hooks';
-import HorizontalWave from '@/components/common/HorizontalWave';
-import Image from 'next/image';
-import cover from '@/assets/images/login.jpg';
-import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { userRegister } from '@/assets/api';
-import { formatPhoneNumber } from '@/utils';
-import PasswordForm from './PasswordForm';
+import { AuthResponse, MemberRegisterData } from '@/types';
 import UserDataForm from '@/app/(member)/UserDataForm';
-import { AuthResponse, MemberEditData } from '@/types';
+import HorizontalWave from '@/components/common/HorizontalWave';
+import PasswordForm from './PasswordForm';
+import { userRegister } from '@/assets/api';
+import cover from '@/assets/images/login.jpg';
 
 const template = {
   subTitle: '享樂酒店，誠摯歡迎',
@@ -23,13 +23,14 @@ const steps = ['輸入信箱及密碼', '填寫基本資料'];
 const Page = () => {
   const widthSize = useWidth();
   const isSmallDevice = widthSize === 'sm';
+  const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set<number>());
 
-  const [userData, setUserData] = useState({} as MemberEditData);
+  const [userData, setUserData] = useState({} as MemberRegisterData);
 
   useEffect(() => {
-    console.log(userData);
+    console.log('userData ->', userData);
   }, [userData]);
 
   const isStepSkipped = (step: number) => {
@@ -48,24 +49,22 @@ const Page = () => {
   };
 
   const onSubmit = async () => {
-  const res = (await userRegister({
-    email: userData.email,
-    password: userData.password as string,
-    name: userData.name,
-    address: {
-      zipcode: userData.address.zipcode,
-      detail: userData.address.detail,
-      county: userData.address.county,
-      city: userData.address.city,
-    },
-    birthday: new Date(userData.birthday || ''),
-    phone: formatPhoneNumber(userData.phone) as string,
-    verificationToken: '',
-  })) as AuthResponse;
-  if (res.status === true) {
-    Cookies.set('token', res.token);
-  }
-};
+    const res = (await userRegister({
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+      phone: userData.phone,
+      birthday: new Date(userData.birthday || ''),
+      address: {
+        zipcode: userData.address.zipcode,
+        detail: userData.address.detail,
+      },
+    })) as AuthResponse;
+    if (res.status === true) {
+      Cookies.set('token', res.token);
+      router.push('/login');
+    }
+  };
 
   return (
     <Grid container direction={isSmallDevice ? 'column' : 'row'}>

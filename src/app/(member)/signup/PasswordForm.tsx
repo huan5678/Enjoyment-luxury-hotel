@@ -78,6 +78,7 @@ const PasswordForm = ({
   };
 
   const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    if (e.target.name !== 'email') return;
     const email = e.target.value.toLowerCase();
     if (email === '') {
       setError('email', {

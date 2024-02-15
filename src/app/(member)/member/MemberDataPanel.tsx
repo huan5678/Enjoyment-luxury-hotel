@@ -1,26 +1,30 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Suspense } from 'react';
-import { Button, Stack, Typography } from '@mui/material';
-import { TitleText } from './style';
-import Card from '@/components/common/Card';
-import { useWidth } from '@/hooks';
-import UserDataForm from '@/app/(member)/UserDataForm';
+import { useEffect, useState, Suspense } from 'react';
 import { SubmitHandler } from 'react-hook-form';
+import { Button, Stack, Typography } from '@mui/material';
+import { useWidth } from '@/hooks';
+import Card from '@/components/common/Card';
+import UserDataForm from '@/app/(member)/UserDataForm';
+import { TitleText } from './style';
+import { getAddressDetailByCode } from '@/utils';
 import { updateUser } from '@/assets/api';
-import { formatPhoneNumber } from '@/utils';
-import { MemberResponseData, MemberEditData, MemberUpdateData, MemberData } from '@/types';
+import { MemberResponseData, MemberEditData, MemberUpdateDetailData, MemberData } from '@/types';
 
-const Page = ({ data }: { data: MemberResponseData }) => {
+const Page = ({ data, getUserInfo }: { data: MemberResponseData; getUserInfo: () => void }) => {
   const [openForm, setOpenForm] = useState(false);
 
   const [memberData, setMemberData] = useState<MemberData | null>(null);
 
   useEffect(() => {
     if (!data?.result) return;
-    if (data.result) setMemberData(data.result as unknown as MemberData);
+    if (data.result) {
+      const member = data.result;
+      setMemberData(member as unknown as MemberData);
+    }
   }, [data]);
+
+  const zipData = getAddressDetailByCode(memberData?.address?.zipcode as number);
 
   const birthday = new Date(memberData?.birthday || 0);
   const formatDate = `${birthday.getFullYear()}年 ${birthday.getMonth() + 1}月 ${birthday.getDate()}日`;
@@ -33,24 +37,23 @@ const Page = ({ data }: { data: MemberResponseData }) => {
   };
 
   const onSubmit: SubmitHandler<MemberEditData> = async (data) => {
+    console.log('data', data);
     const birthday = ` ${data.birthdayYear}-${data.birthdayMonth}-${data.birthdayDay}`;
-    const resultPhone = data.phone[0] === '0' ? data.phone.slice(1) : data.phone;
-    const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone)}`;
-    const newMemberData: MemberUpdateData = {
+    const newMemberData: MemberUpdateDetailData = {
+      userId: memberData?._id as string,
       name: data.name,
-      email: data.email,
-      phone,
+      phone: data.phone,
       address: {
         zipcode: data.address.zipcode,
         detail: data.address.detail,
-        county: data.address.county,
-        city: data.address.city,
       },
       birthday: birthday,
     };
-    console.log(newMemberData);
     const result = await updateUser(newMemberData);
-    console.log(result);
+    if (result.status) {
+      setOpenForm(false);
+      getUserInfo();
+    }
   };
 
   return (
@@ -77,7 +80,10 @@ const Page = ({ data }: { data: MemberResponseData }) => {
             <TitleText title={'姓名'} content={memberData?.name as string} />
             <TitleText title={'手機號碼'} content={memberData?.phone as string} />
             <TitleText title={'生日'} content={formatDate} />
-            <TitleText title={'地址'} content={`${memberData?.address?.zipcode} ${memberData?.address?.detail}`} />
+            <TitleText
+              title={'地址'}
+              content={`${memberData?.address?.zipcode} ${zipData?.city}${zipData?.county}${memberData?.address?.detail}`}
+            />
           </Stack>
         )}
         <Stack

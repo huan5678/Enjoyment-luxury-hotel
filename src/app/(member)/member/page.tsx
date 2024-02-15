@@ -12,14 +12,16 @@ import { AuthResponse } from '@/types';
 
 export default function Page() {
   const [data, setData] = useState<AuthResponse | null>(null);
+
+  const getUserInfo = async () => {
+    const res = await getUser();
+    setData(res as unknown as AuthResponse);
+  };
+
   useEffect(() => {
-    async function fetchData() {
-      const res = await getUser();
-      setData(res as unknown as AuthResponse);
-      console.log(res);
-    }
-    fetchData();
+    getUserInfo();
   }, []);
+
   return (
     <Suspense>
       <Container>
@@ -33,7 +35,7 @@ export default function Page() {
             <ChangePasswordPanel data={data as unknown as AuthResponse} />
           </Grid>
           <Grid item md={7}>
-            <MemberDataPanel data={data as unknown as AuthResponse} />
+            <MemberDataPanel getUserInfo={getUserInfo} data={data as unknown as AuthResponse} />
           </Grid>
         </Grid>
       </Container>

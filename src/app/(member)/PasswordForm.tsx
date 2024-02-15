@@ -5,7 +5,7 @@ import { z } from 'zod';
 import Input from '../../components/common/Input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateUser } from '@/assets/api';
+import { updateUserPwd } from '@/assets/api';
 import { MemberData } from '@/types';
 
 export const changePasswordDataSchema = z
@@ -28,7 +28,6 @@ export const ChangePasswordForm = ({
   memberData: MemberData;
   setOpenForm: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-
   const {
     register,
     handleSubmit,
@@ -38,8 +37,8 @@ export const ChangePasswordForm = ({
   });
 
   const onSubmit = async (data: ChangePasswordDataSchema) => {
-    const result = await updateUser({
-      ...memberData,
+    const result = await updateUserPwd({
+      userId: memberData._id as string,
       newPassword: data.newPassword,
       oldPassword: data.oldPassword,
     });

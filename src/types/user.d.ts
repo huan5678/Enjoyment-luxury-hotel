@@ -9,15 +9,15 @@ export interface IUser {
   address: {
     zipcode: number;
     detail: string;
-    county: string;
-    city: string;
+    county?: string;
+    city?: string;
   };
-  verificationToken: string;
+  verificationToken?: string;
 }
 
 export type Address = {
-  city: string;
-  county: string;
+  city?: string;
+  county?: string;
   zipcode: number;
   detail: string;
 };
@@ -36,6 +36,7 @@ export type MemberData = UserInfo & {
   verificationToken?: string;
   createdAt?: string;
   updatedAt?: string;
+  countryPhoneCode?: string;
 };
 
 export type MemberResponseData = {
@@ -51,19 +52,35 @@ export type MemberPassword = {
   password?: string;
 };
 
-export type MemberUpdateData = UserInfo &
-  MemberPassword & {
-    _id?: string;
-    address?: Address;
-    birthday?: string;
-  };
+export type MemberRegisterData = {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  birthday: string;
+  address: Address;
+};
+
+export type MemberUpdateDetailData = {
+  userId: string;
+  name: string;
+  phone: string;
+  birthday: string;
+  address: Address;
+};
+
+export type MemberUpdatePwdData = {
+  userId: string;
+  oldPassword: string;
+  newPassword: string;
+};
 
 export type UserLoginData = {
   email: string | null;
   password: string;
 };
 
-export type MemberEditData = MemberUpdateData & {
+export type MemberEditData = MemberUpdateDetailData & {
   city: string;
   countryPhoneCode: string;
   birthdayYear: number;
@@ -84,4 +101,13 @@ export type CheckLoginSchema = {
 
 export type UserResponse = ApiResponse<MemberData> & {
   token?: string;
+};
+
+export type VerifyEmailData = {
+  email: string;
+};
+export type ForgotPwdData = {
+  email: string;
+  code: string;
+  newPassword: string;
 };

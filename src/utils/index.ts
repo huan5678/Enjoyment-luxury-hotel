@@ -1,4 +1,5 @@
 import { z, ZodType } from 'zod';
+import { ZipCodeMap } from '@/assets/cityData';
 import { StatusCode, ApiResponse } from '@/types';
 
 export function formatPhoneNumber(phoneNumber: string | number) {
@@ -79,7 +80,7 @@ export async function post<T>(path: string, body: any, args: RequestInit = {}): 
 
 export async function put<T>(path: string, body: any, args: RequestInit = {}): Promise<T> {
   const defaultArgs: RequestInit = {
-    method: 'POST',
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -105,4 +106,10 @@ export function handleApiResponse<T>(res: ApiResponse<T>): ApiResponse<T | null>
   }
 
   return res;
+}
+
+export function getAddressDetailByCode(code: number) {
+  if (!code) return { detail: '', zipcode: 0, city: '', county: '' };
+  const data = ZipCodeMap.find((item) => item.zipcode === code);
+  return data;
 }

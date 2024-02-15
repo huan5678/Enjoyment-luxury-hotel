@@ -129,7 +129,7 @@ const LoginForm = () => {
             label={<Label color="white">記住帳號</Label>}
           />
         </FormGroup>
-        <Link href="/forgot-password">忘記密碼</Link>
+        <Link href="/forgot">忘記密碼</Link>
       </Stack>
       <Button
         fullWidth

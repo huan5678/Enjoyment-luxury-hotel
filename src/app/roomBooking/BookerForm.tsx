@@ -268,7 +268,7 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
                   label="地址"
                   options={cities.map((city) => ({ value: city, label: city }))}
                   error={Boolean(errors.address?.city)}
-                  placeholder="您所在的城市"
+                  placeholder={field.value ? `${field.value}` : '您所在的城市'}
                 />
               )}
             />
@@ -289,7 +289,7 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
                   }
                   error={Boolean(errors.address?.county)}
                   disabled={!city}
-                  placeholder="您所在的區域"
+                  placeholder={field.value ? `${field.value}` : '您所在的區域'}
                 />
               )}
             />

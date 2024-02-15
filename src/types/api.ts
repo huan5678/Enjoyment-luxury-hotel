@@ -8,9 +8,9 @@ export interface StatusCode {
   statusCode?: 200 | 201 | 400 | 401 | 403 | 404 | 500 | 502 | 503 | 504 | number;
 }
 
-type BaseResponse = StatusCode & {
+export type BaseResponse = StatusCode & {
   status: boolean;
-  message: string;
+  message?: string;
 };
 
 export type ApiResponse<T> = BaseResponse & Result<T>;
