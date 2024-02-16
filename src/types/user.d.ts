@@ -75,24 +75,25 @@ export type MemberUpdatePwdData = {
   newPassword: string;
 };
 
+export type MemberUpdateData<T> = T['oldPassword'] extends string ? MemberUpdatePwdData : MemberUpdateDetailData;
+
 export type UserLoginData = {
   email: string | null;
   password: string;
 };
 
-export type MemberEditData = MemberUpdateDetailData & {
-  city: string;
-  countryPhoneCode: string;
-  birthdayYear: number;
-  birthdayMonth: number;
-  birthdayDay: number;
-  check?: boolean;
-};
-
-export type UserRegisterData = UserInfo & {
-  password?: string;
-  birthday?: string;
-};
+export type MemberEditData = UserInfo &
+  MemberPassword & {
+    _id: string;
+    address?: Address;
+    city: string;
+    birthday?: string;
+    countryPhoneCode?: string;
+    birthdayYear?: number;
+    birthdayMonth?: number;
+    birthdayDay?: number;
+    check?: boolean;
+  };
 
 export type CheckLoginSchema = {
   status: boolean;

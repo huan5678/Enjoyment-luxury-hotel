@@ -8,7 +8,7 @@ import Card from '@/components/common/Card';
 import UserDataForm from '@/app/(member)/UserDataForm';
 import { TitleText } from './style';
 import { getAddressDetailByCode } from '@/utils';
-import { updateUser } from '@/assets/api';
+import { updateUserDetail } from '@/assets/api';
 import { MemberResponseData, MemberEditData, MemberUpdateDetailData, MemberData } from '@/types';
 
 const Page = ({ data, getUserInfo }: { data: MemberResponseData; getUserInfo: () => void }) => {
@@ -49,7 +49,7 @@ const Page = ({ data, getUserInfo }: { data: MemberResponseData; getUserInfo: ()
       },
       birthday: birthday,
     };
-    const result = await updateUser(newMemberData);
+    const result = await updateUserDetail(newMemberData);
     if (result.status) {
       setOpenForm(false);
       getUserInfo();

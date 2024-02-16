@@ -1,15 +1,16 @@
 'use client';
 
-import { Button, styled } from '@mui/material';
-
-import { apiPostForgot } from '@/assets/api';
-import Input from '@/components/common/Input';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { Button, styled } from '@mui/material';
+
+import Input from '@/components/common/Input';
+import { apiPostForgot } from '@/assets/api';
 
 export const forgotDataSchema = z.object({
   email: z.string().email('請輸入有效的電子郵件地址'),

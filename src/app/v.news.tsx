@@ -9,14 +9,14 @@ import Typography from '@mui/material/Typography';
 import Title from '@/app/c.title';
 import DotImage from '@/assets/images/dot.png';
 import { apiGetNews } from '@/assets/api';
-import { NewsResponseData, NewsSchema, ApiResponse, INews } from '@/types';
+import { NewsResponseData, NewsSchema, ApiResponse } from '@/types';
 
 export default function News() {
   // 因為免費方案 API 會睡著，避免等太久先塞一樣的資料
   const [data, setData] = useState<NewsSchema[]>([]);
 
   const getNews = async () => {
-    await apiGetNews().then((res: ApiResponse<INews[] | INews | null>) => {
+    await apiGetNews().then((res: ApiResponse<NewsSchema[] | NewsSchema | null>) => {
       if (res.status === true && Array.isArray(res.result)) setData(res.result as NewsSchema[]);
     });
   };

@@ -13,13 +13,13 @@ import TitleBox from '@/app/c.titleBox';
 import LineImage from '@/assets/images/line.png';
 import DotImage from '@/assets/images/dot.png';
 import { apiGetCulinary } from '@/assets/api';
-import { FoodTypeResponseData, FoodTypeSchema, ICulinary, ApiResponse } from '@/types';
+import { FoodTypeResponseData, FoodTypeSchema, ApiResponse } from '@/types';
 
 export default function FoodType() {
   const [data, setData] = useState<FoodTypeSchema[]>([]);
 
   const getFoodType = async () => {
-    await apiGetCulinary().then((res: ApiResponse<ICulinary[] | ICulinary | null>) => {
+    await apiGetCulinary().then((res: ApiResponse<FoodTypeSchema[] | FoodTypeSchema | null>) => {
       if (res.status === true && Array.isArray(res.result)) {
         setData(res.result as FoodTypeSchema[]);
       }

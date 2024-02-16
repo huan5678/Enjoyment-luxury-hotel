@@ -5,12 +5,11 @@ import { getCookie, setCookie } from 'cookies-next';
 import {
   ApiResponse,
   CheckResponse,
-  BaseResponse,
-  ICulinary,
-  INews,
+  FoodTypeSchema,
+  NewsSchema,
   IOrder,
   IRoom,
-  IUser,
+  MemberRegisterData,
   VerifyEmailData,
   ForgotPwdData,
   MemberUpdateDetailData,
@@ -62,7 +61,7 @@ export async function getUser(): Promise<UserResponse> {
   };
 }
 
-export async function updateUser(data: MemberUpdateDetailData): Promise<ApiResponse<null>> {
+export async function updateUserDetail(data: MemberUpdateDetailData): Promise<ApiResponse<null>> {
   const res = await put<ApiResponse<null>>(`${baseUrl}/api/v1/user/`, data, config());
   const { statusCode, status, message } = res;
   if (statusCode !== undefined && [400, 403, 404].includes(statusCode)) {
@@ -133,7 +132,7 @@ export async function userLogin(data: UserLoginData): Promise<UserResponse> {
   return res;
 }
 
-export async function userRegister(data: IUser): Promise<UserResponse> {
+export async function userRegister(data: MemberRegisterData): Promise<UserResponse> {
   const res = await post<UserResponse>(`${baseUrl}/api/v1/user/signup`, data);
   const { token } = res;
   if (token) setCookie('token', token);
@@ -179,8 +178,8 @@ export async function apiCheckUserIsLogin(): Promise<CheckResponse> {
   return handleApiResponse(result);
 }
 
-export async function apiGetNews(id?: string | undefined): Promise<ApiResponse<INews[] | INews | null>> {
-  const res = await get<ApiResponse<INews[] | INews | null>>(`${baseUrl}/api/v1/home/news/${id ? id : ''}`);
+export async function apiGetNews(id?: string | undefined): Promise<ApiResponse<NewsSchema[] | NewsSchema | null>> {
+  const res = await get<ApiResponse<NewsSchema[] | NewsSchema | null>>(`${baseUrl}/api/v1/home/news/${id ? id : ''}`);
 
   return handleApiResponse(res);
 }
@@ -202,8 +201,12 @@ export async function getRoomDetail(roomId: string) {
   return res;
 }
 
-export async function apiGetCulinary(id?: string | undefined): Promise<ApiResponse<ICulinary[] | ICulinary | null>> {
-  const res = await get<ApiResponse<ICulinary[] | ICulinary | null>>(`${baseUrl}/api/v1/home/culinary/${id ? id : ''}`);
+export async function apiGetCulinary(
+  id?: string | undefined,
+): Promise<ApiResponse<FoodTypeSchema[] | FoodTypeSchema | null>> {
+  const res = await get<ApiResponse<FoodTypeSchema[] | FoodTypeSchema | null>>(
+    `${baseUrl}/api/v1/home/culinary/${id ? id : ''}`,
+  );
 
   return handleApiResponse(res);
 }

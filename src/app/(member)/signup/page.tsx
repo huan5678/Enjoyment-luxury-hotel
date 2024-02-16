@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Box, Grid, Link, Stack, Typography, Step, StepConnector, StepLabel, Stepper } from '@mui/material';
 import { useWidth } from '@/hooks';
 import Cookies from 'js-cookie';
-import { AuthResponse, MemberRegisterData } from '@/types';
+import { AuthResponse, MemberEditData } from '@/types';
 import UserDataForm from '@/app/(member)/UserDataForm';
 import HorizontalWave from '@/components/common/HorizontalWave';
 import PasswordForm from './PasswordForm';
@@ -27,7 +27,7 @@ const Page = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set<number>());
 
-  const [userData, setUserData] = useState({} as MemberRegisterData);
+  const [userData, setUserData] = useState({} as MemberEditData);
 
   useEffect(() => {
     console.log('userData ->', userData);
@@ -52,9 +52,9 @@ const Page = () => {
     const res = (await userRegister({
       name: userData.name,
       email: userData.email,
-      password: userData.password,
+      password: userData?.password as string,
       phone: userData.phone,
-      birthday: new Date(userData.birthday || ''),
+      birthday: new Date(userData.birthday || '').toDateString(),
       address: {
         zipcode: userData.address.zipcode,
         detail: userData.address.detail,
