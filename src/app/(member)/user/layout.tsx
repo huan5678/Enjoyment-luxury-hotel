@@ -6,36 +6,16 @@ import Image from 'next/image';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 
 import { useWidth } from '@/hooks';
+import { getRouteConfig } from '@/router';
 import HorizontalWave from '@/components/common/HorizontalWave';
 import cover from '@/assets/images/login.jpg';
-
-const template = {
-  subTitle: '享樂酒店，誠摯歡迎',
-  title: '立即開始旅程',
-};
 
 export default function Layout({ children }: { children: React.ReactElement }) {
   const pathname = usePathname();
   const widthSize = useWidth();
   const isSmallDevice = widthSize === 'sm';
 
-  const title = () => {
-    const pathList = ['/user/login', '/user/signup', '/user/getcode', '/user/forgot'];
-    const pathIndex = pathList.indexOf(pathname);
-
-    switch (pathIndex) {
-      case 0:
-        return '立即開始旅程';
-      case 1:
-        return '立即註冊';
-      case 2:
-        return '忘記密碼';
-      case 3:
-        return '設置新密碼';
-      default:
-        return '立即開始旅程';
-    }
-  };
+  const titleTem = getRouteConfig(pathname);
 
   return (
     <Grid container direction={isSmallDevice ? 'column' : 'row'}>
@@ -71,10 +51,10 @@ export default function Layout({ children }: { children: React.ReactElement }) {
           }}>
           <Stack direction={'column'} gap={'0.5rem'}>
             <Typography variant="title" component="span" sx={{ fontWeight: 400 }} color="primary">
-              {template.subTitle}
+              {titleTem.pageSubtitle}
             </Typography>
             <Typography variant={isSmallDevice ? 'h3' : 'h1'} component="h1" sx={{ fontWeight: 700 }} color="white">
-              {title()}
+              {titleTem.pageTitle}
             </Typography>
           </Stack>
           <Suspense>{children}</Suspense>

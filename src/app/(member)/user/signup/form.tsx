@@ -10,11 +10,6 @@ import PasswordForm from './PasswordForm';
 import { userRegister } from '@/assets/api';
 import { MemberEditData } from '@/types';
 
-const template = {
-  subTitle: '享樂酒店，誠摯歡迎',
-  title: '立即註冊',
-};
-
 const steps = ['輸入信箱及密碼', '填寫基本資料'];
 
 const SignupForm = () => {
@@ -103,7 +98,7 @@ const SignupForm = () => {
           sx={{ fontWeight: 400, marginTop: '1rem' }}
           color="white">
           {`已經有會員了嗎?`}
-          <Link href={'/login'} sx={{ marginLeft: '0.5rem' }}>
+          <Link href={'/user/login'} sx={{ marginLeft: '0.5rem' }}>
             立即登入
           </Link>
         </Typography>
