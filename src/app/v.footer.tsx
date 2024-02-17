@@ -49,11 +49,9 @@ export default function Footer() {
   const router = useRouter();
   const [isShowFooter, setIsShowFooter] = useState(true);
 
-  const disableFooterRouteList = ['/login', '/signup'];
-
   const handlePath = () => {
     try {
-      const state = disableFooterRouteList.some((item) => item === pathname);
+      const state = pathname.includes('/user');
       setIsShowFooter(!state);
     } catch (e) {
       console.error(e);

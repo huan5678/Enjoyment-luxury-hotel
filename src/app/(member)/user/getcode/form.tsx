@@ -1,24 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+
+import { Button, styled } from '@mui/material';
 
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button, styled } from '@mui/material';
-
 import Input from '@/components/common/Input';
-import { apiPostForgot } from '@/assets/api';
 
-export const forgotDataSchema = z.object({
+import { apiPostGenerateEmailCode } from '@/assets/api';
+
+export const getCodeDataSchema = z.object({
   email: z.string().email('請輸入有效的電子郵件地址'),
-  code: z.string().min(1),
-  password: z.string().min(1),
 });
 
-type ForgotDataSchema = z.infer<typeof forgotDataSchema>;
+type GetCodeDataSchema = z.infer<typeof getCodeDataSchema>;
 
 const Form = styled('form')(({ theme }) => ({
   display: 'flex',
@@ -28,37 +27,31 @@ const Form = styled('form')(({ theme }) => ({
   paddingBottom: '2.5rem',
 }));
 
-const LoginForm = () => {
+const GetCodeForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const searchParams = useSearchParams();
-  const account = searchParams.get('email')!;
   const {
     register,
     handleSubmit,
     setError,
     watch,
     formState: { errors, isDirty, isValid },
-  } = useForm<ForgotDataSchema>({
-    defaultValues: {
-      email: account || undefined,
-    },
-    resolver: zodResolver(forgotDataSchema),
+  } = useForm<GetCodeDataSchema>({
+    resolver: zodResolver(getCodeDataSchema),
   });
 
   const email = watch('email');
   const wait = async (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-  const onSubmit = async (data: ForgotDataSchema) => {
+  const onSubmit = async (data: GetCodeDataSchema) => {
     setIsLoading(true);
-    const { email, code, password } = data;
-    const res = await apiPostForgot({ email, code, newPassword: password });
+    const { email } = data;
+    const res = await apiPostGenerateEmailCode({ email });
     if (res.status) {
       wait(2000);
-      alert('新密碼設置成功');
-      router.push(`/login`);
+      router.push(`/user/forgot?email=${email}`);
     } else {
-      setError('password', {
+      setError('email', {
         type: 'manual',
         message: res.message,
       });
@@ -78,27 +71,6 @@ const LoginForm = () => {
         error={errors.email ? true : false}
         helperText={errors.email ? errors.email.message : ''}
       />
-      <Input
-        label="驗證碼"
-        labelColor={'white'}
-        fullWidth
-        type="text"
-        {...register('code')}
-        placeholder="請輸入驗證碼"
-        error={errors.code ? true : false}
-        helperText={errors.code ? errors.code.message : ''}
-      />
-      <Input
-        label="新密碼"
-        labelColor={'white'}
-        fullWidth
-        type="password"
-        {...register('password')}
-        placeholder="請輸入您的新密碼"
-        error={errors.password ? true : false}
-        helperText={errors.password ? errors.password.message : ''}
-      />
-
       <Button
         fullWidth
         type="submit"
@@ -107,10 +79,10 @@ const LoginForm = () => {
         size="large"
         disabled={!isDirty || !isValid || isLoading}
         sx={{ padding: '1rem', marginTop: '2.5rem' }}>
-        送出
+        取得驗證碼
       </Button>
     </Form>
   );
 };
 
-export default LoginForm;
+export default GetCodeForm;

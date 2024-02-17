@@ -1,22 +1,21 @@
 'use client';
 
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, Suspense } from 'react';
 import Image from 'next/image';
-import { Suspense } from 'react';
+import moment from 'moment';
+
+import { KeyboardArrowDown } from '@mui/icons-material';
 import { Grid, Typography, Stack, Box, Button, Divider, Container, Link } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 
-import Card from '@/components/common/Card';
-
+import { calculateStayDays, formatDate, formatNTD } from '@/utils';
 import { useWidth } from '@/hooks';
 
-import CheckIcon from '@mui/icons-material/Check';
-import { KeyboardArrowDown } from '@mui/icons-material';
 import ModalController from './ModalController';
-import { calculateStayDays, formatDate, formatNTD } from '@/utils';
 import Headline from '@/components/common/Headline';
-import { IOrder } from '@/types';
-import moment from 'moment';
+import Card from '@/components/common/Card';
 import { getOrders } from '@/assets/api';
+import { IOrder } from '@/types';
 
 const MAX_ORDERS_DISPLAY = 5;
 

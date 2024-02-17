@@ -1,6 +1,6 @@
 import { z, ZodType } from 'zod';
 import { ZipCodeMap } from '@/assets/cityData';
-import { StatusCode, ApiResponse } from '@/types';
+import { ApiResponse } from '@/types';
 
 export function formatPhoneNumber(phoneNumber: string | number) {
   // 移除所有非數字字符

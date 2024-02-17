@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { setCookie } from 'cookies-next';
 import useStore from '@/store';
@@ -57,7 +57,7 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer, userName }: menuDo
         </Link>
 
         {!isLogin && (
-          <Link className="nav-link" href="/login" onClick={atClick}>
+          <Link className="nav-link" href="/user/login" onClick={atClick}>
             <Typography component="span" color="white">
               會員登入
             </Typography>

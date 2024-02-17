@@ -1,18 +1,21 @@
 'use client';
 
-import { Button, styled } from '@mui/material';
+import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 
-import { apiPostGenerateEmailCode } from '@/assets/api';
-import Input from '@/components/common/Input';
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { Button, styled } from '@mui/material';
+
+import Input from '@/components/common/Input';
+import { apiPostForgot } from '@/assets/api';
 
 export const forgotDataSchema = z.object({
   email: z.string().email('請輸入有效的電子郵件地址'),
+  code: z.string().min(1),
+  password: z.string().min(1),
 });
 
 type ForgotDataSchema = z.infer<typeof forgotDataSchema>;
@@ -25,9 +28,11 @@ const Form = styled('form')(({ theme }) => ({
   paddingBottom: '2.5rem',
 }));
 
-const LoginForm = () => {
+const ForgotForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const account = searchParams.get('email')!;
   const {
     register,
     handleSubmit,
@@ -35,6 +40,9 @@ const LoginForm = () => {
     watch,
     formState: { errors, isDirty, isValid },
   } = useForm<ForgotDataSchema>({
+    defaultValues: {
+      email: account || undefined,
+    },
     resolver: zodResolver(forgotDataSchema),
   });
 
@@ -43,13 +51,13 @@ const LoginForm = () => {
 
   const onSubmit = async (data: ForgotDataSchema) => {
     setIsLoading(true);
-    const { email } = data;
-    const res = await apiPostGenerateEmailCode({ email });
+    const { email, code, password } = data;
+    const res = await apiPostForgot({ email, code, newPassword: password });
     if (res.status) {
-      wait(2000);
-      router.push(`/forgot/checkverify?email=${email}`);
+      alert('新密碼設置成功');
+      router.push(`/user/login`);
     } else {
-      setError('email', {
+      setError('password', {
         type: 'manual',
         message: res.message,
       });
@@ -69,6 +77,26 @@ const LoginForm = () => {
         error={errors.email ? true : false}
         helperText={errors.email ? errors.email.message : ''}
       />
+      <Input
+        label="驗證碼"
+        labelColor={'white'}
+        fullWidth
+        type="text"
+        {...register('code')}
+        placeholder="請輸入驗證碼"
+        error={errors.code ? true : false}
+        helperText={errors.code ? errors.code.message : ''}
+      />
+      <Input
+        label="新密碼"
+        labelColor={'white'}
+        fullWidth
+        type="password"
+        {...register('password')}
+        placeholder="請輸入您的新密碼"
+        error={errors.password ? true : false}
+        helperText={errors.password ? errors.password.message : ''}
+      />
       <Button
         fullWidth
         type="submit"
@@ -77,10 +105,10 @@ const LoginForm = () => {
         size="large"
         disabled={!isDirty || !isValid || isLoading}
         sx={{ padding: '1rem', marginTop: '2.5rem' }}>
-        取得驗證碼
+        送出
       </Button>
     </Form>
   );
 };
 
-export default LoginForm;
+export default ForgotForm;
