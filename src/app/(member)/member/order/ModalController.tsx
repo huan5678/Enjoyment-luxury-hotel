@@ -18,7 +18,7 @@ export default function Layout({
   isSmallDevice: boolean;
   id: string;
   targetOrder?: IOrder | undefined;
-  handleRefreshTargetOrder?: () => void;
+  handleRefreshTargetOrder: () => void;
 }) {
   const [openModal, setOpenModal] = useState(false);
   const router = useRouter();

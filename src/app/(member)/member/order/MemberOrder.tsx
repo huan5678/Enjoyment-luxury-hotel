@@ -166,7 +166,7 @@ const MemberOrder = ({ data }: { data: IOrder[] }) => {
                       ))}
                     </Card>
                   </Stack>
-                  {targetOrder && <ModalController isSmallDevice={isSmallDevice} id={targetOrder?._id as string} />}
+                  {targetOrder && <ModalController isSmallDevice={isSmallDevice} id={targetOrder?._id as string} handleRefreshTargetOrder={()=>{}}/>}
                 </Card>
               )}
             </Grid>
