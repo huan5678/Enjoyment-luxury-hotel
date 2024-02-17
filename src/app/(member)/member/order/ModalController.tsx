@@ -1,14 +1,25 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Typography, Stack, Box, Button, Backdrop, Fade, Modal } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 import Drawer from './Drawer';
 import { deleteOrder } from '@/assets/api';
+import { IOrder } from '@/types';
 
-export default function Layout({ isSmallDevice, id }: { isSmallDevice: boolean; id: string }) {
+export default function Layout({
+  isSmallDevice,
+  id,
+  targetOrder,
+}: {
+  isSmallDevice: boolean;
+  id: string;
+  targetOrder?: IOrder | undefined;
+}) {
   const [openModal, setOpenModal] = useState(false);
+  const router = useRouter();
 
   function handleCloseModal() {
     setOpenModal(false);
@@ -18,13 +29,18 @@ export default function Layout({ isSmallDevice, id }: { isSmallDevice: boolean; 
     setOpenModal(true);
   }
 
-  function handleDeleteOrder(id: string) {
-    return async () => {
-      const res = await deleteOrder(id);
-      setOpenModal(false);
-      return res;
-    };
-  }
+  const handleDeleteOrder = async (id: string) => {
+    console.log('handleDeleteOrder', id);
+    const res = await deleteOrder(id);
+    setOpenModal(false);
+  };
+
+  const handelRouteRoom = () => {
+    if (targetOrder?.roomId._id) {
+      const route = `/room-type/${targetOrder?.roomId._id}`;
+      router.push(route);
+    }
+  };
 
   return (
     <>
@@ -32,7 +48,7 @@ export default function Layout({ isSmallDevice, id }: { isSmallDevice: boolean; 
         <Button variant={'outlined'} size={'large'} fullWidth onClick={handleOpenModal}>
           {'取消訂單'}
         </Button>
-        <Button variant={'contained'} size={'large'} fullWidth>
+        <Button variant={'contained'} size={'large'} fullWidth onClick={handelRouteRoom}>
           {'查看詳情'}
         </Button>
       </Stack>
@@ -78,7 +94,13 @@ export default function Layout({ isSmallDevice, id }: { isSmallDevice: boolean; 
               <Button variant={'outlined'} size={'large'} fullWidth onClick={handleCloseModal}>
                 {'關閉視窗'}
               </Button>
-              <Button variant={'contained'} size={'large'} fullWidth onClick={handleDeleteOrder(id)}>
+              <Button
+                variant={'contained'}
+                size={'large'}
+                fullWidth
+                onClick={() => {
+                  handleDeleteOrder(id);
+                }}>
                 {'確定取消'}
               </Button>
             </Stack>
@@ -137,7 +159,13 @@ export default function Layout({ isSmallDevice, id }: { isSmallDevice: boolean; 
                 <Button variant={'outlined'} size={'large'} fullWidth onClick={handleCloseModal}>
                   {'關閉視窗'}
                 </Button>
-                <Button variant={'contained'} size={'large'} fullWidth onClick={handleDeleteOrder(id)}>
+                <Button
+                  variant={'contained'}
+                  size={'large'}
+                  fullWidth
+                  onClick={() => {
+                    handleDeleteOrder(id);
+                  }}>
                   {'確定取消'}
                 </Button>
               </Stack>

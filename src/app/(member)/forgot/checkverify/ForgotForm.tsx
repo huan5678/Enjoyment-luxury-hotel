@@ -55,6 +55,7 @@ const LoginForm = () => {
     const res = await apiPostForgot({ email, code, newPassword: password });
     if (res.status) {
       wait(2000);
+      alert('新密碼設置成功');
       router.push(`/login`);
     } else {
       setError('password', {

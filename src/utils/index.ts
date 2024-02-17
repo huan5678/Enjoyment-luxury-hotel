@@ -90,7 +90,9 @@ export async function put<T>(path: string, body: any, args: RequestInit = {}): P
   return await http<T>(new Request(path, finalArgs));
 }
 export async function del<T>(path: string, args: RequestInit = { method: 'DELETE' }): Promise<T> {
-  return await http<T>(new Request(path, args));
+  const defaultArgs: RequestInit = { method: 'DELETE' };
+  const finalArgs = { ...defaultArgs, ...args, headers: { ...defaultArgs.headers, ...args.headers } };
+  return await http<T>(new Request(path, finalArgs));
 }
 
 export function handleApiResponse<T>(res: ApiResponse<T>): ApiResponse<T | null> {

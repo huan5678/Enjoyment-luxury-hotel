@@ -33,7 +33,12 @@ const Page = () => {
   };
 
   const handleGetOrder = async () => {
-    await getOrders().then((res) => setData(res.result as unknown as IOrder[]));
+    await getOrders().then((res) => {
+      if (Array.isArray(res.result)) {
+        const data = res.result.filter((item) => item.status === 0);
+        setData(data as IOrder[]);
+      }
+    });
   };
 
   useEffect(() => {
@@ -170,7 +175,13 @@ const Page = () => {
                         ))}
                       </Card>
                     </Stack>
-                    {targetOrder && <ModalController isSmallDevice={isSmallDevice} id={targetOrder?._id as string} />}
+                    {targetOrder && (
+                      <ModalController
+                        isSmallDevice={isSmallDevice}
+                        targetOrder={targetOrder}
+                        id={targetOrder?._id as string}
+                      />
+                    )}
                   </Card>
                 )}
               </Grid>
