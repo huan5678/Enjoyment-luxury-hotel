@@ -13,10 +13,12 @@ export default function Layout({
   isSmallDevice,
   id,
   targetOrder,
+  handleRefreshTargetOrder,
 }: {
   isSmallDevice: boolean;
   id: string;
   targetOrder?: IOrder | undefined;
+  handleRefreshTargetOrder: () => void;
 }) {
   const [openModal, setOpenModal] = useState(false);
   const router = useRouter();
@@ -30,9 +32,9 @@ export default function Layout({
   }
 
   const handleDeleteOrder = async (id: string) => {
-    console.log('handleDeleteOrder', id);
     const res = await deleteOrder(id);
     setOpenModal(false);
+    handleRefreshTargetOrder();
   };
 
   const handelRouteRoom = () => {

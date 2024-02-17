@@ -41,6 +41,11 @@ const Page = () => {
     });
   };
 
+  const handleRefreshTargetOrder = () => {
+    setTargetOrder(undefined);
+    handleGetOrder();
+  };
+
   useEffect(() => {
     handleGetOrder();
   }, []);
@@ -180,6 +185,7 @@ const Page = () => {
                         isSmallDevice={isSmallDevice}
                         targetOrder={targetOrder}
                         id={targetOrder?._id as string}
+                        handleRefreshTargetOrder={handleRefreshTargetOrder}
                       />
                     )}
                   </Card>
